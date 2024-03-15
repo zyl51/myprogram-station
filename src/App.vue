@@ -1,26 +1,64 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/favicon.ico">
+  <link rel="icon" type="image/png" href="./assets/img/favicon.ico">
+
+  <title>Bootstrap</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css?family=Nunito:300,300i,400,600,800" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+  <link href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" rel="stylesheet">
+
+  <!-- 导航栏 -->
+  <div>
+    <MyNavbar />
+    <!-- :key="$route.fullPath" 表示根据完整路径跳转 -->
+    <router-view :key="$route.fullPath" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap/dist/js/bootstrap.min.js';
+// <!-- Main CSS -->
+import '@/assets/css/main.css';
+// <!-- Animation CSS -->
+import '@/assets/css/vendor/aos.css';
+// import $ from 'jquery';
+// import Share from 'share.js';
+import AOS from 'aos';
+
+import MyNavbar from './components/MyNavbar.vue';
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
+    MyNavbar,
+  },
+  mounted() {
+    AOS.init({
+      duration: 700
+    });
+
+    AOS.init({
+      disable: function () {
+        var maxWidth = 1200;
+        return window.innerWidth < maxWidth;
+      }
+    });
+  },
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+*[data-aos] {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 </style>
