@@ -1,5 +1,6 @@
 <template>
   <nav aria-label="Page navigation">
+
     <ul class="pagination">
       <!-- 向左的按钮，当页数等于 1 的时候不能点击 -->
       <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
@@ -66,7 +67,8 @@
           <a class="page-link" @click="changePage(currentPage - 1)">{{ currentPage - 1 }}</a>
         </li>
         <li  class="page-item active">
-          <a class="page-link" @click="changePage(currentPage)">{{ currentPage }}</a>
+          <a class="page-link" @click="changePage(currentPage)" >
+            {{ currentPage }}</a>
         </li>
         <li  class="page-item">
           <a class="page-link" @click="changePage(currentPage + 1)">{{ currentPage + 1 }}</a>
@@ -103,25 +105,22 @@ export default {
   },
   methods: {
   },
-  setup() {
-    let store = useStore();
-    // 初始化数据
-    store.dispatch("initializeData");
-    // let recommend = store.state.recommend.recommend;
-    const currentPage = computed(() => {
+  setup(props, context) {
+    const store = useStore();
+    const currentPage = computed(() => {0
       return store.getters.getCurrentPage;
+      // return store.getters['MoudleRecpmmend/getCurrentPage'];
     });
     const totalPages = computed(() => {
       return store.getters.getTotalPages;
     });
-    // let totalPages = ref(recommend.totalPages);
 
     // 切换页数的函数
     const changePage = (page) => {
       if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
-        // currentPage.value = page;
         store.dispatch('updateCurrentPage', { page });
-        console.log("changePage currentPage.value:", currentPage.value);
+        // console.log("changePage");
+        context.emit("scrollToTop", page);
       }
     }
 

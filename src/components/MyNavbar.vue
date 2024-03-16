@@ -22,7 +22,7 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
-              :to="{ name: 'recommend', params: { page: '2' } }">推荐</router-link>
+              :to="{ name: 'recommend', params: { page: currentPage } }">推荐</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
@@ -75,7 +75,9 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+
 import SearchPopup from '@/components/MyNavbarComponents/SearchPopup.vue';
 
 export default {
@@ -119,7 +121,16 @@ export default {
       window.removeEventListener('scroll', handleScroll);
     });
 
-    return { scrolled };
+    // 获取当前页数
+    const store = useStore();
+    const currentPage = computed(() => {
+      return store.getters.getCurrentPage;
+    });
+
+    return { 
+      scrolled,
+      currentPage,
+    };
   },
 }
 </script>

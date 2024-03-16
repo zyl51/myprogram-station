@@ -6,7 +6,7 @@ const ModuleRecommend = {
     // 存储所有的数据 
     recommend: reactive({
       posts: [],
-      currentPage: 1,
+      currentPage: -1,
       totalPages: 1,
       totalPosts: 1,
     }),
@@ -16,6 +16,9 @@ const ModuleRecommend = {
     // 只能读取，不能修改
     getCurrentPage(state) {
       return state.recommend.currentPage;
+    },
+    getPosts(state) {
+      return state.recommend.posts;
     },
     getTotalPages(state) {
       return state.recommend.totalPages;
@@ -65,6 +68,7 @@ const ModuleRecommend = {
         totalPosts: 1,
       });
 
+      // 申请列表的数据
       // 请求数据
       $.ajax({
         url: "http://localhost:8082/api/recommend/totalnumbers",
@@ -86,6 +90,7 @@ const ModuleRecommend = {
             },
             dataType: "json",
             success (resp) {
+              // console.log("success");
               recommend.posts = resp;
               context.commit("updateRecommend", recommend);
             },
@@ -99,12 +104,26 @@ const ModuleRecommend = {
         }
       });
     },
+
+// *************************************************************************
     // 修改 currrntPage 页数
     updateCurrentPage(context, data) {
       // console.log("actions updateCurrentPage ", data.page);
       $.ajax({
-        url: "http://localhost:8082/api/recommend/postlist/" + context.state.recommend.currentPage,
+        url: "http://localhost:8082/api/recommend/postlist/" + data.page,
+        type: "GET",
+        data: {
 
+        },
+        dataType: "json",
+        success(resp) {
+          context.commit("updatePosts", resp);
+          context.commit("updateCurrentPage", data.page);
+          // console.log(resp);
+        },
+        error(textStatus, errorThrown) {
+          console.error("get recommend posts: ", context.state.recommend.currentPage, textStatus, errorThrown);
+        }
       });
       context.commit("updateCurrentPage", data.page);
 
