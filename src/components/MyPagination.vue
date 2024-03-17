@@ -97,30 +97,34 @@
 
 <script>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 
 export default {
   name: "MyPagination",
   props: {
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+    totalPages: {
+      type: Number,
+      required: true,
+    },
   },
   methods: {
   },
   setup(props, context) {
-    const store = useStore();
-    const currentPage = computed(() => {0
-      return store.getters.getCurrentPage;
-      // return store.getters['MoudleRecpmmend/getCurrentPage'];
+    // 使用 defineProps 获取传入的 props
+    const currentPage = computed(() => {
+      return props.currentPage;
     });
     const totalPages = computed(() => {
-      return store.getters.getTotalPages;
-    });
-
+      return props.totalPages;
+    })
+    
     // 切换页数的函数
     const changePage = (page) => {
       if (page >= 1 && page <= totalPages.value && page !== currentPage.value) {
-        store.dispatch('updateCurrentPage', { page });
-        // console.log("changePage");
-        context.emit("scrollToTop", page);
+        context.emit("changePage", page);
       }
     }
 
@@ -130,8 +134,6 @@ export default {
     }
 
     return {
-      currentPage,
-      totalPages,
       changePage,
       range,
     }

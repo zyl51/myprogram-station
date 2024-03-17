@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 import ModuleRecommend from './recommend'
+import ModuleFollow from './follow'
+import ModuleUser from './user'
 
 export default createStore({
   state: {
@@ -19,5 +21,7 @@ export default createStore({
   modules: {
     // 为了将 modules 进行分割
     recommend: ModuleRecommend,
+    follow: ModuleFollow,
+    user: ModuleUser,
   }
 })

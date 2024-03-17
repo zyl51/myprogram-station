@@ -1,17 +1,18 @@
 <template>
   <MyFeatured :posts="posts" :title="title" />
 
+  <!-- 分页组件 -->
   <MyPagination class="my-nav"
-    :current-page="currentPage"
-    :total-pages="totalPages"
-    @page-change="handlePageChange"
+    :currentPage="currentPage"
+    :totalPages="totalPages"
+    @changePage="changePage($event)"
   ></MyPagination>
 </template>
 
 <script>
-import { ref } from 'vue';
-import $ from 'jquery';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 import MyFeatured from '@/components/BrowsBlogs/MyFeatured.vue';
 import MyPagination from '@/components/MyPagination.vue';
@@ -25,38 +26,53 @@ export default {
   data() {
     return {
       title: "Follow",
-      currentPage: 1,
-      totalPages: 10,
     }
   },
   methods: {
-    handlePageChange(page) {
-      this.currentPage = page;
-    },
   },
   setup() {
-    const posts = ref([]);
-    const route = useRoute();
-    const user_id = route.query.user_id;
-    const page = route.query.page;
+    const store = useStore();
+    const router = useRouter();
 
-    // 通过 ajax 获取后端的一个关注 post 列表
-    $.ajax({
-      url: "http://localhost:8082/api/follow/postlist",
-      type: "GET",
-      data: {
-        user_id: user_id,
-        page: page,
-      },
-      dataType: "json",
-      success (resp) {
-        posts.value = resp;
-        console.log(posts.value);
-      }
+    store.dispatch("user/initializeData");
+
+    const user_id = computed(() => {
+      return store.getters['user/getUserId'];
+    });
+    // console.log(user_id.value);
+    // 划到顶部
+    const changePage = (page) => {
+      store.dispatch('follow/updateCurrentPage', { user_id:user_id.value, page });
+      router.push({
+        name: 'follow', // 你的组件的路由名称
+        query: { user_id: user_id.value, page: page },
+      });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth" // 平滑滚动到顶部
+      });
+    }
+
+    // 初始化数据
+    if (store.getters['follow/getCurrentPage'] === undefined || store.getters['follow/getCurrentPage'] === -1) {
+      // 调用 follw 中的数据进行初始化
+      store.dispatch("follow/initializeData", user_id.value);
+    }
+    const posts = computed(() => {
+      return store.getters['follow/getPosts']; 
+    });
+    const currentPage = computed(() => {
+      return store.getters['follow/getCurrentPage'];
+    });
+    const totalPages = computed(() => {
+      return store.getters['follow/getTotalPages'];
     });
 
     return {
+      changePage,
       posts,
+      currentPage,
+      totalPages,
     }
   }
 };
@@ -77,4 +93,4 @@ export default {
 
 
 
-<!-- RecommendView -->
+<!-- FollowView -->

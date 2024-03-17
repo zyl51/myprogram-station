@@ -4,7 +4,9 @@
 
   <!-- 分页组件 -->
   <MyPagination class="my-nav"
-    @scrollToTop="scrollToTop($event)"
+    :currentPage="currentPage"
+    :totalPages="totalPages"
+    @changePage="changePage($event)"
   ></MyPagination>
 </template>
 
@@ -26,13 +28,19 @@ export default {
   data() {
     return {
       title: "Recommend",
-      router: useRouter(),
     }
   },
   methods: {
-    // 划到顶部
-    scrollToTop(page) {
-      this.router.push({
+    
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    // 切换页码并且,划到顶部
+    const changePage = (page) => {
+      // console.log("changePage");
+      store.dispatch('recommend/updateCurrentPage', { page });
+      router.push({
         name: 'recommend', // 你的组件的路由名称
         params: { page: page },
       });
@@ -40,31 +48,27 @@ export default {
         top: 0,
         behavior: "smooth" // 平滑滚动到顶部
       });
-      
-      // console.log("scrollToTop");
     }
-  },
-  setup() {
-    
-    // const router = useRouter();
-    // const handlePageChange = (newPage) => {
-    //   router.push({
-    //     name: 'recommend', // 你的组件的路由名称
-    //     params: { page: newPage },
-    //   });
-    // };
 
-    const store = useStore();
     // 初始化数据
-    if (store.getters.getCurrentPage === undefined || store.getters.getCurrentPage === -1) {
-      store.dispatch("initializeData");
+    if (store.getters['recommend/getCurrentPage'] === undefined || store.getters['recommend/getCurrentPage'] === -1) {
+      store.dispatch("recommend/initializeData");
     }
     const posts = computed(() => {
-      return store.getters.getPosts;
+      return store.getters['recommend/getPosts'];
+    });
+    const currentPage = computed(() => {
+      return store.getters['recommend/getCurrentPage'];
+    });
+    const totalPages = computed(() => {
+      return store.getters['recommend/getTotalPages'];
     });
 
     return {
+      changePage,
       posts,
+      currentPage,
+      totalPages,
     }
   },
 };

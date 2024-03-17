@@ -57,7 +57,7 @@
               :to="{ name: 'login' }">登录</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link register" :class="{ 'router-link-active-scrolled': scrolled }"
+            <router-link class="nav-link register" style="margin-right: 14px;" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'register' }">注册</router-link>
           </li>
           <!-- 发布按钮 -->
@@ -124,7 +124,8 @@ export default {
     // 获取当前页数
     const store = useStore();
     const currentPage = computed(() => {
-      return store.getters.getCurrentPage;
+      // console.log(store.getters['recommend/getCurrentPage']);
+      return store.getters['recommend/getCurrentPage'];
     });
 
     return { 

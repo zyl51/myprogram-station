@@ -1,11 +1,11 @@
 import { reactive } from 'vue';
 import $ from 'jquery';
 
-const ModuleRecommend = {
+const ModuleFollow = {
   namespaced: true,
   state: {
     // 存储所有的数据 
-    recommend: reactive({
+    follow: reactive({
       posts: [],
       currentPage: -1,
       totalPages: 1,
@@ -16,53 +16,53 @@ const ModuleRecommend = {
     // 想获取 state 的内容并且需要通过一定计算的时候放进这里面进行获取
     // 只能读取，不能修改
     getCurrentPage(state) {
-      return state.recommend.currentPage;
+      return state.follow.currentPage;
     },
     getPosts(state) {
-      return state.recommend.posts;
+      return state.follow.posts;
     },
     getTotalPages(state) {
-      return state.recommend.totalPages;
+      return state.follow.totalPages;
     },
   },
   mutations: {
     // 对 state 数据进行直接修改
     // 无法执行异步操作
-    updateRecommend(state, recommend) {
+    updateFollow(state, follow) {
       // 修改整个推荐页的信息
-      state.recommend.posts = recommend.posts;
-      state.recommend.currentPage = recommend.currentPage;
-      state.recommend.totalPages = recommend.totalPages;
-      state.recommend.totalPosts = recommend.totalPosts;
+      state.follow.posts = follow.posts;
+      state.follow.currentPage = follow.currentPage;
+      state.follow.totalPages = follow.totalPages;
+      state.follow.totalPosts = follow.totalPosts;
     },
     updatePosts(state, posts) {
       // 修改新的列表信息
-      state.recommend.posts = posts;
+      state.follow.posts = posts;
     },
     updateCurrentPage(state, currentPage) {
       // 修改当前页是什么
-      state.recommend.currentPage = currentPage;
+      state.follow.currentPage = currentPage;
     },
     updateTotalPosts(state, totalPosts) {
       // 修改总列表数
-      state.recommend.totalPosts = totalPosts;
-      state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
+      state.follow.totalPosts = totalPosts;
+      state.follow.totalPages = Math.ceil(state.follow.totalPosts / 10);
     },
     addTotalPosts(state) {
       // 增加列表数
-      state.recommend.totalPosts ++ ;
-      state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
+      state.follow.totalPosts ++ ;
+      state.follow.totalPages = Math.ceil(state.follow.totalPosts / 10);
     },
     sunTotalPosts(state) {
-      state.recommend.totalPosts -- ;
-      state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
+      state.follow.totalPosts -- ;
+      state.follow.totalPages = Math.ceil(state.follow.totalPosts / 10);
     }
   },
   actions: {
     // 用于初始化数据
-    initializeData(context) {
-      // 
-      const recommend = reactive({
+    initializeData(context, user_id) {
+      // 关注的帖子
+      const follow = reactive({
         posts: [],
         currentPage: 1,
         totalPages: 1,
@@ -72,41 +72,38 @@ const ModuleRecommend = {
       // 申请列表的数据
       // 请求数据
       $.ajax({
-        url: "https://localhost:8082/api/recommend/totalnumbers",
+        url: "https://localhost:8082/api/follow/totalnumbers/" + user_id,
         type: "GET",
         data: {
 
         },
-        dataType: "json",
+        dataType: "json", 
         success(resp) {
           // 总帖子数和总页数
-          // console.log(resp.number);
-          recommend.totalPosts = resp.number;
-          recommend.totalPages = Math.ceil(recommend.totalPosts / 10);
+          follow.totalPosts = resp.number;
+          follow.totalPages = Math.ceil(follow.totalPosts / 10);
           
           // 申请帖子列表
           $.ajax({
-            url: "https://localhost:8082/api/recommend/postlist/" + recommend.currentPage,
+            url: "https://localhost:8082/api/follow/postlist",
             type: "GET",
             data: {
-              
+              user_id: user_id,
+              page: follow.currentPage,
             },
             dataType: "json",
             success (resp) {
-              // console.log("success");
-              recommend.posts = resp;
-              // 在使用别的模块的需要下面这么做
-              // context.commit("recommend/updateRecommend", recommend, { root: true });
-              // 调用自己的不需要
-              context.commit("updateRecommend", recommend);
+
+              follow.posts = resp;
+              context.commit("updateFollow", follow);
             },
             error(textStatus, errorThrown) {
-              console.error("get recommend postlist: ", textStatus, errorThrown);
+              console.error("get follow postlist: ", textStatus, errorThrown);
             }
           });
         },
         error(textStatus, errorThrown) {
-          console.error("get recommend total numbers: ", textStatus, errorThrown);
+          console.error("get follow total numbers: ", textStatus, errorThrown);
         }
       });
     },
@@ -116,10 +113,11 @@ const ModuleRecommend = {
     updateCurrentPage(context, data) {
       // console.log("actions updateCurrentPage ", data.page);
       $.ajax({
-        url: "https://localhost:8082/api/recommend/postlist/" + data.page,
+        url: "https://localhost:8082/api/follow/postlist",
         type: "GET",
         data: {
-
+          user_id: data.user_id,
+          page: data.page,
         },
         dataType: "json",
         success(resp) {
@@ -128,7 +126,7 @@ const ModuleRecommend = {
           // console.log(resp);
         },
         error(textStatus, errorThrown) {
-          console.error("get recommend posts: ", context.state.recommend.currentPage, textStatus, errorThrown);
+          console.error("get follow posts: ", context.state.follow.currentPage, textStatus, errorThrown);
         }
       });
 
@@ -138,4 +136,4 @@ const ModuleRecommend = {
   }
 }
 
-export default ModuleRecommend;
+export default ModuleFollow;

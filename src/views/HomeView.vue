@@ -14,7 +14,7 @@
             <strong> UI Kit</strong>
           </h5>
           <!-- 从首页点击推荐页面时的页数 -->
-          <router-link class="btn btn-lg btn-outline-white btn-round" :to="{ name: 'recommend', params: {page: '1'} }">
+          <router-link class="btn btn-lg btn-outline-white btn-round" :to="{ name: 'recommend', params: {page: currentPage} }">
             <i class="fab fa-telegram mr-2"></i>
             Start
           </router-link>
@@ -127,10 +127,22 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   name: 'HomeView',
   components: {
+  },
+  setup() {
+    const store = useStore();
+    const currentPage = computed(() => {
+      return store.getters['recommend/getCurrentPage'];
+    });
+
+    return {
+      currentPage,
+    }
   }
 }
 </script>

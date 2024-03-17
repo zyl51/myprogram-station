@@ -19,7 +19,8 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6 p-0 bg-white h-md-100 loginarea">
+    <!-- class = loginarea -->
+    <div class="col-md-6 p-0 bg-white h-md-100">
       <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
         <form class="border rounded p-5">
           <h3 class="mb-4 text-center">Register</h3>
