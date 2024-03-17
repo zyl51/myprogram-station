@@ -26,7 +26,7 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
-              :to="{ name: 'follow', query: { user_id: 1, page: 2 } }">关注</router-link>
+              :to="{ name: 'follow', query: { user_id: user_id, page: page } }">关注</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
@@ -128,9 +128,21 @@ export default {
       return store.getters['recommend/getCurrentPage'];
     });
 
+    const user_id = computed(() => {
+      // console.log(store.getters['recommend/getCurrentPage']);
+      return store.getters['user/getUserId'];
+    });
+
+    const page = computed(() => {
+      // console.log(store.getters['recommend/getCurrentPage']);
+      return store.getters['follow/getCurrentPage'];
+    });
+
     return { 
       scrolled,
       currentPage,
+      user_id,
+      page,
     };
   },
 }
