@@ -53,6 +53,10 @@ export default {
     // 初始化数据
     if (store.getters['recommend/getCurrentPage'] === undefined || store.getters['recommend/getCurrentPage'] === -1) {
       store.dispatch("recommend/initializeData");
+      router.push({
+        name: 'recommend', // 你的组件的路由名称
+        params: { page: 1 },
+      });
     }
     const posts = computed(() => {
       return store.getters['recommend/getPosts'];

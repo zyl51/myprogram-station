@@ -38,12 +38,12 @@ const routes = [
     component: RegisterView,
   },
   {
-    path: '/blog/',
+    path: '/blog/:postId/',
     name: 'blog',
     component: BlogView,
   },
   {
-    path: '/editor',
+    path: '/editor/',
     name: 'editor',
     component: EditorView,
   }

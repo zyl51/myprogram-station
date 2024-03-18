@@ -3,7 +3,8 @@
     <div class="card">
       <div class="card-body">
         <!-- 标题和信息部分 start -->
-        <div id="title">扩展欧几里得</div>
+        <div id="title">{{ post.title }}</div>
+        <!-- <div id="title"> 标题 </div> -->
         <!-- 用户信息 -->
         <div id="author">
           <div class="inline-block-class font-big">作者：</div>
@@ -11,17 +12,17 @@
           <a class="head-and-name" href="#">
             <!-- 头像 -->
             <div id="author-head-image" class="inline-block-class">
-              <img src="@/assets/img/demo/avatar.png" alt="头像" style="border-radius: 50%;">
+              <img :src="user.avatar_url" alt="头像" style="border-radius: 50%;">
             </div>
             <div class="inline-block-class" style="margin-right: 7px;"></div>
             <!-- 用户名 -->
-            <div id="author-name" class="inline-block-class">蓝鲸上的孤岛</div>
+            <div id="author-name" class="inline-block-class">{{ user.name }}</div>
           </a>
           <!-- <div class="inline-block-class" style="margin-right: 10px;"></div> -->
           <!-- 日期 -->
           <div class="inline-block-class">
             <div class="inline-block-class font-big">，发布时间：</div>
-            <div id="date" class="inline-block-class">2024-02-16</div>
+            <div id="date" class="inline-block-class">{{ post.release_time }}</div>
           </div>
         </div>
         <!-- 标题和信息部分 end -->
@@ -29,7 +30,7 @@
         <hr>
         <!-- 文章的正文 -->
         <div style="padding: 20px;">
-          <VMarkdownView :content="markdownText" />
+          <VMarkdownView :content="post.content" />
         </div>
       </div>
     </div>
@@ -91,12 +92,15 @@ import { VMarkdownView } from 'vue3-markdown';
 import 'vue3-markdown/dist/style.css';
 
 import $ from 'jquery';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default {
   name: "BlogView",
   components: {
     VMarkdownView,
+  },
+  props: {
   },
   data() {
     return {
@@ -127,8 +131,62 @@ export default {
       }
     });
 
+    const route = useRoute();
+    const postId = ref(route.params.postId);
+    // 获取单个帖子
+
+    const post = reactive({});
+    const user = reactive({});
+
+    // 获取单个帖子和单个用户
+    $.ajax({
+        url: "https://localhost:8082/api/post/" + postId.value,
+        type: "GET",
+        data: {
+        },
+        dataType: "json",
+        success(resp) {
+          // console.log("success post");
+          post.id = resp.id;
+          post.title = resp.title;
+          post.release_time = resp.release_time;
+          post.cover_url = resp.cover_url;
+          post.content = resp.content;
+          post.user_id = resp.user_id;
+          post.user_name = resp.user_name;
+
+          // post.value = { ...resp };
+
+          const user_id = post.user_id;
+          $.ajax({
+            url: "https://localhost:8082/api/user/" + user_id,
+            type: "GET",
+            data: {
+            },
+            dataType: "json",
+            success(resp) {
+              user.id = resp.id;
+              user.name = resp.name;
+              user.register_time = resp.register_time;
+              user.avatar_url = resp.avatar_url;
+            },
+            error(textStatus, errorThrown) {
+              console.error("get user: ", textStatus, errorThrown);
+            }
+          });
+
+        },
+        error(textStatus, errorThrown) {
+          console.error("get post: ", textStatus, errorThrown);
+        }
+      });
+
+      // console.log(post);
+
     return {
       users,
+      post: post,
+      user: user,
     }
   }
 };

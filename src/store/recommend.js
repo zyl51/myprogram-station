@@ -15,11 +15,11 @@ const ModuleRecommend = {
   getters: {
     // 想获取 state 的内容并且需要通过一定计算的时候放进这里面进行获取
     // 只能读取，不能修改
-    getCurrentPage(state) {
-      return state.recommend.currentPage;
-    },
     getPosts(state) {
       return state.recommend.posts;
+    },
+    getCurrentPage(state) {
+      return state.recommend.currentPage;
     },
     getTotalPages(state) {
       return state.recommend.totalPages;

@@ -29,18 +29,21 @@ HEADER
               <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name }}</strong>
               <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name }}</strong>
               <h3 class="mb-0">
-                <a class="text-dark" href="http://localhost:8080/blog">
-                  {{ post.title }} 
-                </a>
+                <router-link class="text-dark" :to="{name: 'blog', params: {postId: post.id}}">
+                  {{ post.title }}
+                </router-link>
               </h3>
               <div class="mb-2 text-muted inline-block-class">
                 发布时间：{{ post.release_time }}
               </div>
-              <!-- <div class="card-text mb-auto posts"> -->
-                <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
-                <!-- <VMarkdownView class="vmarkdown" content="111"/> -->
-              <!-- </div> -->
-              <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a>
+                <!-- <router-link class="card-text mb-auto posts" :to="{name: 'blog'}">
+                  <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
+                </router-link> -->
+              <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
+              <router-link class="text-gray" :to="{name: 'blog', params: {postId: post.id}}">
+                Continue reading
+              </router-link>
+              <!-- <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a> -->
             </div>
             <img v-if="index % 2 == 1" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
           </div>

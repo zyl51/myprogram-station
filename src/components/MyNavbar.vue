@@ -28,10 +28,10 @@
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'follow', query: { user_id: user_id, page: page } }">关注</router-link>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'blog' }">blog</router-link>
-          </li>
+          </li> -->
         </ul>
 
         <div v-if="isShowSearchPopup" @click="hideSearchPopup" class="overlay"></div>
@@ -124,17 +124,14 @@ export default {
     // 获取当前页数
     const store = useStore();
     const currentPage = computed(() => {
-      // console.log(store.getters['recommend/getCurrentPage']);
       return store.getters['recommend/getCurrentPage'];
     });
 
     const user_id = computed(() => {
-      // console.log(store.getters['recommend/getCurrentPage']);
       return store.getters['user/getUserId'];
     });
 
     const page = computed(() => {
-      // console.log(store.getters['recommend/getCurrentPage']);
       return store.getters['follow/getCurrentPage'];
     });
 
