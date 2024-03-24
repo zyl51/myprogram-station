@@ -1,6 +1,10 @@
 <template>
-  <div class="container">
-    <div class="editor-container" style="margin-top: 100px;">
+  <div class="container" style="margin-top: 100px;">
+    <div style="font-weight: 900;align-content: center;">
+      正常语句想要换行可以输入两个或更多空格之后再回车
+    </div>
+    <div class="editor-container">
+      <br>
       <VMarkdownEditor v-model="content" class="editor" />
     </div>
     <div>

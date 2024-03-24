@@ -45,8 +45,8 @@
           <div class="media-body">
             <h5>Rust</h5>
             <p class="text-muted">
-              <!-- The backend language of this project uses Rust. -->
-              编程驿站的后端使用 Rust 和 Actix-web 框架.
+              The backend language of this project uses Rust and actix-web.
+              <!-- 编程驿站的后端使用 Rust 和 Actix-web 框架. -->
             </p>
           </div>
         </div>
@@ -60,8 +60,8 @@
           <div class="media-body">
             <h5>Vue3</h5>
             <p class="text-muted">
-              <!-- The front-end framework of this project uses Vue3.js -->
-              编程驿站的前端使用的 vue3 框架.
+              The front-end framework of this project uses Vue3.js
+              <!-- 编程驿站的前端使用的 vue3 框架. -->
             </p>
           </div>
         </div>
@@ -75,8 +75,8 @@
           <div class="media-body">
             <h5>Bootstrap 5.3.2</h5>
             <p class="text-muted">
-              <!-- The front-end UI uses free Bootstrap. -->
-              前端 UI 使用的是免费的 Bootstrap.
+              The front-end UI uses free Bootstrap.
+              <!-- 前端 UI 使用的是免费的 Bootstrap. -->
             </p>
           </div>
         </div>
@@ -90,7 +90,8 @@
           <div class="media-body">
             <h5>Responsive</h5>
             <p class="text-muted">
-              编程驿站响应式的适用于：电脑、平板或手机.
+              Program Stations are responsive and suitable for computers or mobile phones
+              <!-- 编程驿站响应式的适用于：电脑或手机. -->
             </p>
           </div>
         </div>
@@ -103,7 +104,8 @@
           <div class="media-body">
             <h5>Website Features</h5>
             <p class="text-muted">
-              您可以阅读、编辑和编写自己的帖子，或者更改所有内容.
+              You can read, edit, and write your own post, or make changes to all the content
+              <!-- 您可以阅读、编辑和编写自己的帖子，或者更改所有内容. -->
             </p>
           </div>
         </div>
@@ -116,7 +118,8 @@
           <div class="media-body">
             <h5>Markdown</h5>
             <p class="text-muted">
-              编程驿站的帖子支持使用 markdown 语法
+              Posts on Program Stations support the use of markdown syntax.
+              <!-- 编程驿站的帖子支持使用 markdown 语法。 -->
             </p>
           </div>
         </div>

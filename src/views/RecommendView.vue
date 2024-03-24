@@ -15,7 +15,7 @@ import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
-import MyFeatured from '@/components/BrowsBlogs/MyFeatured.vue';
+import MyFeatured from '@/components/BrowsBloglist/MyFeatured.vue';
 import MyPagination from '@/components/MyPagination.vue';
 
 
