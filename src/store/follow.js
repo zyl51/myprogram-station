@@ -93,7 +93,7 @@ const ModuleFollow = {
             },
             dataType: "json",
             success (resp) {
-
+              // console.log(Math.ceil(0.1));
               follow.posts = resp;
               context.commit("updateFollow", follow);
             },

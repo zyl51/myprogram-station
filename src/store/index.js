@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import ModuleRecommend from './recommend'
 import ModuleFollow from './follow'
 import ModuleUser from './user'
+import ModuleSearch from './search'
 
 export default createStore({
   state: {
@@ -23,5 +24,6 @@ export default createStore({
     recommend: ModuleRecommend,
     follow: ModuleFollow,
     user: ModuleUser,
+    search: ModuleSearch,
   }
 })

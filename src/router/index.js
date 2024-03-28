@@ -6,6 +6,7 @@ import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import BlogView from '@/views/BlogView.vue';
 import EditorView from '@/views/EditorView.vue';
+import SearchView from '@/views/SearchView.vue';
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     path: '/editor/',
     name: 'editor',
     component: EditorView,
+  },
+  {
+    path: '/search/',
+    name: 'search',
+    component: SearchView,
   }
 ]
 

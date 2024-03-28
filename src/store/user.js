@@ -5,7 +5,7 @@ const ModuleUser = {
   state: {
     // 存储所有的数据 
     user: reactive({
-      id: 0,
+      id: 1,
       username: "",
       avatar: "",
       follower_count: 0,
@@ -37,7 +37,7 @@ const ModuleUser = {
   actions: {
     initializeData(context) {
       const user = reactive({
-        id: 0,
+        id: 1,
         username: "",
         avatar: "",
         follower_count: 0,

@@ -102,7 +102,7 @@ export default {
             success(resp) {
               user.id = resp.id;
               user.name = resp.name;
-              user.register_time = resp.register_time;
+              // user.register_time = resp.register_time;
               user.avatar_url = resp.avatar_url;
             },
             error(textStatus, errorThrown) {

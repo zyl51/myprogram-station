@@ -1,5 +1,4 @@
 <template>
-  <!-- 推荐 -->
   <!------------------------------------------
 HEADER
 ------------------------------------------->
@@ -21,10 +20,10 @@ HEADER
     <div class="container">
 
       <!-- Featured -->
-      <div class="row">
+      <div class="row gap-y">
         <div v-for="(post, index) in posts" :key="post.id" class="col-lg-12">
-          <div class="card flex-md-row mb-4 box-shadow h-xl-400 post-hover">
-            <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
+          <div class="card flex-md-row mb-4 box-shadow h-xl-300 post-hover">
+            <!-- <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url"> -->
             <div class="card-body d-flex flex-column align-items-start">
               <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name }}</strong>
               <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name }}</strong>
@@ -39,19 +38,19 @@ HEADER
                 <!-- <router-link class="card-text mb-auto posts" :to="{name: 'blog'}">
                   <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
                 </router-link> -->
-              <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
+              <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content" style="font-size: 17px;" />
               <router-link class="text-gray" :to="{name: 'blog', params: {postId: post.id}}">
                 Continue reading
               </router-link>
               <!-- <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a> -->
             </div>
-            <img v-if="index % 2 == 1" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
+            <img  class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
           </div>
         </div>
       </div>
       <!-- End Featured -->
-    </div>
 
+    </div>
     
   </section>
 </template>

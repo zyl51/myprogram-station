@@ -2,12 +2,13 @@
   <nav class="topnav navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-0"
     :class="{ 'bg-white': scrolled, 'navbar-light': scrolled, 'shadow-sm': scrolled }">
     <div class="container-fluid">
-      <a class="navbar-brand" href="https://v5.bootcss.com/">
+      <router-link class="navbar-brand" :class="{ 'router-link-active-scrolled': scrolled }"
+        style="transform: scale(1.0);" :to="{ name: 'home' }">
         <i class="fas fa-star-and-crescent"></i>
         <strong>
           Program Station
         </strong>
-      </a>
+      </router-link>
 
       <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
         aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,13 +31,14 @@
           </li>
           <!-- <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
-              :to="{ name: 'blog' }">blog</router-link>
+              :to="{ name: 'search' }">search</router-link>
           </li> -->
         </ul>
 
+        <!-- 展示 -->
         <div v-if="isShowSearchPopup" @click="hideSearchPopup" class="overlay"></div>
         <!-- 通过变量 SearchPopupRef 调用子组件 SearchPopup.focusInput 的函数 -->
-        <SearchPopup ref="SearchPopupRef" v-if="isShowSearchPopup" />
+        <SearchPopup ref="SearchPopupRef" v-if="isShowSearchPopup" @hideSearchPopup="hideSearchPopup" />
 
 
         <ul class="navbar-nav ml-auto d-flex align-items-center">
@@ -57,12 +59,12 @@
               :to="{ name: 'login' }">登录</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link register" style="margin-right: 14px;" :class="{ 'router-link-active-scrolled': scrolled }"
+            <router-link class="nav-link register" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'register' }">注册</router-link>
           </li>
           <!-- 发布按钮 -->
           <li class="nav-item">
-            <router-link class="btn btn-info btn-round btn-plus" :class="{ 'router-link-active-scrolled': scrolled }"
+            <router-link style="margin-left: 10px; margin-right: 10px;" class="btn btn-info btn-round btn-plus" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'editor' }">
               <i class="fas fa-plus"></i>
               发帖
@@ -98,6 +100,8 @@ export default {
       this.isShowSearchPopup = true;
       // 修改聚焦到组件 SearchPopup 上
       this.$nextTick(() => {
+        // 聚焦到 ref 名为 SearchPopupRef 的组件或 DOM元素 输入框上,
+        // focusInput 是子组件中的函数
         this.$refs.SearchPopupRef.focusInput();
       });
     },

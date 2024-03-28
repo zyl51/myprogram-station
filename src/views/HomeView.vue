@@ -14,7 +14,8 @@
             <strong> UI Kit</strong>
           </h5>
           <!-- 从首页点击推荐页面时的页数 -->
-          <router-link class="btn btn-lg btn-outline-white btn-round" :to="{ name: 'recommend', params: {page: currentPage} }">
+          <router-link class="btn btn-lg btn-outline-white btn-round"
+            :to="{ name: 'recommend', params: { page: currentPage } }">
             <i class="fab fa-telegram mr-2"></i>
             Start
           </router-link>
@@ -32,6 +33,38 @@
       stroke="white" />
   </svg>
   <!-- End 首页导航 -->
+
+<!-- CAROUSEL -->
+  <div class="container" style="margin-top: 50px;">
+    <section class="pt-4 pb-5" data-aos="fade-up" id="example-carousel">
+			<h3 class="h5 mb-4 font-weight-bold"></h3>
+			<div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+					<li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+				</ol>
+				<div class="carousel-inner shadow-sm rounded">
+					<div class="carousel-item active">
+						<img class="d-block w-100"
+							src="../assets/img/demo/carousel1.jpg"
+							alt="First slide">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>Mission Beach, San Diego, United States by Matthew Hamilton</h5>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<img class="d-block w-100"
+							src="../assets/img/demo/carousel2.jpg"
+							alt="Second slide">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>Golden Gate Bridge, San Francisco, United States by Tim Foster</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+  </div>
+
 
 
   <!-- Start 结尾的属性 -->
@@ -130,12 +163,29 @@
 </template>
 
 <script>
+
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   name: 'HomeView',
   components: {
+  },
+  mounted() {
+    this.preloadImages();
+  },
+  methods: {
+    preloadImages() {
+      const images = [
+        "../assets/img/demo/carousel1.jpg",
+        "../assets/img/demo/carousel2.jpg",
+        // "../assets/img/demo/carousel3.jpg"
+      ];
+      images.forEach((image) => {
+        const img = new Image();
+        img.src = image;
+      });
+    }
   },
   setup() {
     const store = useStore();

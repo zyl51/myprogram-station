@@ -23,7 +23,7 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/js/bootstrap';
+// import 'bootstrap/dist/js/bootstrap.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 // <!-- Main CSS -->
 import '@/assets/css/main.css';
