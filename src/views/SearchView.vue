@@ -5,6 +5,7 @@
   <section class="pt-5 pb-5" data-aos="fade-down" style="margin-top: 50px;">
     <div class="container">
 
+
       <!-- Featured -->
       <div class="row gap-y">
         <div v-for="(post, index) in posts" :key="post.id" class="col-lg-6">
@@ -27,7 +28,7 @@
                   <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
                 </router-link> -->
               <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"
-                style="font-size: 17px;" />
+                style="font-size: 10px;" />
               <router-link class="text-gray" :to="{ name: 'blog', params: { postId: post.id } }">
                 Continue reading
               </router-link>
@@ -38,66 +39,9 @@
         </div>
       </div>
       <!-- End Featured -->
-
-      <div class="row gap-y">
-        <div v-for="(post) in posts" :key="post.id" class="col-md-6 col-lg-4">
-          <div class="card">
-            <img class="img-card-top" :src="post.cover_url">
-            <div class="card-body">
-              <a href="#">
-                <h5 class="card-title text-dark">{{ post.title  }}</h5>
-                <span class="card-text text-muted">{{ post.release_time }}</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
   </section>
-  <div class="container">
-    <div class="row gap-y">
-
-      <div class="col-md-6 col-lg-4">
-        <div class="card">
-          <img class="img-card-top" src="../assets/img/demo/blog3.jpg">
-          <div class="card-body">
-            <a href="#">
-              <h5 class="card-title text-dark">10 Steps for a Successful Business without Investing Money</h5>
-              <span class="card-text text-muted">
-                Posted on May 24, 2019 by Dalida </span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <div class="card">
-          <img class="img-card-top" src="../assets/img/demo/blog4.jpg">
-          <div class="card-body">
-            <a href="#">
-              <h5 class="card-title text-dark">Happy wife is happy life says life experts</h5>
-              <span class="card-text text-muted">
-                Posted on May 24, 2019 by Sandra </span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="card">
-          <img class="img-card-top" src="../assets/img/demo/blog5.jpg">
-          <div class="card-body">
-            <a href="#">
-              <h5 class="card-title text-dark">Pack your bags and see the world today</h5>
-              <span class="card-text text-muted">
-                Posted on May 24, 2019 by Mike </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- 分页组件 -->
   <MyPagination class="my-nav" :currentPage="currentPage" :totalPages="totalPages" @changePage="changePage($event)">
@@ -110,10 +54,11 @@ import 'vue3-markdown/dist/style.css';
 
 import { computed, ref, reactive, onMounted } from 'vue'; // 更改引入的 Vue 相关模块
 
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
 import $ from 'jquery';
 
 import MyPagination from '@/components/MyPagination.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "SearchView",
@@ -122,10 +67,11 @@ export default {
     MyPagination,
   },
   setup() {
-    const store = useStore();
+    const router = useRouter();
 
+    // 从搜索历史记录中过去搜索的数据
     const searchQuery = computed(() => {
-      return store.getters['search/getSearchQuery'];
+      return JSON.parse(localStorage.getItem("searchHistory"))[0];
     });
 
     const currentPage = ref(1);
@@ -133,7 +79,32 @@ export default {
     const posts = reactive([]);
 
     const changePage = (page) => {
-      console.log("page: {}", page);
+      // 在点击分页按钮时，获取关键词
+      console.log("changePage: ", page);
+      currentPage.value = page;
+      $.ajax({
+        url: "https://localhost:8082/api/search",
+        type: "GET",
+        data: {
+          search_query: searchQuery.value, // 获取计算属性的值
+          page: page,
+        },
+        dataType: "json",
+        success(resp) {
+          // console.log(resp);
+          totalPages.value = resp.total;
+          posts.length = 0;
+          posts.push(...resp.posts);
+        },
+        error(textStatus, errorThrown) {
+          console.error("get search: ", textStatus, errorThrown);
+        }
+      });
+
+      router.push({
+        name: 'search', // 你的组件的路由名称
+      });
+      // console.log("page: ", page, "posts: ", posts.value);
       window.scrollTo({
         top: 0,
         behavior: "smooth"
@@ -151,14 +122,17 @@ export default {
         dataType: "json",
         success(resp) {
           // console.log(resp);
+          totalPages.value = resp.total;
           posts.length = 0;
-          posts.push(...resp);
+          posts.push(...resp.posts);
         },
         error(textStatus, errorThrown) {
           console.error("get search: ", textStatus, errorThrown);
         }
       });
     });
+
+
 
     return {
       changePage,

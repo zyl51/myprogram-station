@@ -75,7 +75,7 @@ export default {
       localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory));
 
       // 先将数据更新到 store 上
-      this.$store.dispatch("search/updateSearchQuery", this.searchQuery);
+      // this.$store.dispatch("search/updateSearchQuery", this.searchQuery);
 
       // 使用router进行跳转，并带上查询参数
       this.$router.push({ name: 'search' });
