@@ -7,7 +7,7 @@ const ModuleFollow = {
     // 存储所有的数据 
     follow: reactive({
       posts: [],
-      currentPage: 1,
+      currentPage: -1,
       totalPages: 1,
       totalPosts: 1,
     }),
@@ -61,7 +61,7 @@ const ModuleFollow = {
   actions: {
     // 用于初始化数据
     initializeData(context, user_id) {
-      context.commit("updateFollow", {});
+      // context.commit("updateFollow", {});
       // 关注的帖子
       const follow = reactive({
         posts: [],

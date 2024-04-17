@@ -6,7 +6,7 @@ const ModuleUser = {
   state: {
     // 存储所有的数据 
     user: reactive({
-      id: 3,
+      id: 0,
       username: "",
       avatar_url: "",
       follower_count: 0,
