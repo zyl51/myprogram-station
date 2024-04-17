@@ -39,15 +39,16 @@ export default {
     // 切换页码并且,划到顶部
     const changePage = (page) => {
       // console.log("changePage");
-      store.dispatch('recommend/updateCurrentPage', { page });
-      router.push({
-        name: 'recommend', // 你的组件的路由名称
-        params: { page: page },
+      store.dispatch('recommend/updateCurrentPage', { page }).then(() => {
+        router.push({
+          name: 'recommend', // 你的组件的路由名称
+          params: { page: page },
+        });
       });
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth" // 平滑滚动到顶部
-      });
+      // window.scrollTo({
+      //   top: 0,
+      //   behavior: "smooth" // 平滑滚动到顶部
+      // });
     }
 
     // 初始化数据

@@ -32,25 +32,23 @@ export default {
   },
   setup() {
     const store = useStore();
+    console.log("token", store.getters['user/getToken']);
     const router = useRouter();
 
     // 初始化用户数据
-    store.dispatch("user/initializeData");
+    // store.dispatch("user/initializeData");
 
     const user_id = computed(() => {
       return store.getters['user/getUserId'];
     });
-    // console.log(user_id.value);
+    console.log(user_id.value);
     // 划到顶部
     const changePage = (page) => {
-      store.dispatch('follow/updateCurrentPage', { user_id:user_id.value, page });
-      router.push({
-        name: 'follow', // 你的组件的路由名称
-        query: { user_id: user_id.value, page: page },
-      });
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth" // 平滑滚动到顶部
+      store.dispatch('follow/updateCurrentPage', { user_id:user_id.value, page }).then(() => {
+        router.push({
+          name: 'follow', // 你的组件的路由名称
+          query: { user_id: user_id.value, page: page },
+        });
       });
     }
 

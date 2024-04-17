@@ -1,44 +1,24 @@
 <template>
   <!-- Main -->
   <div class="d-md-flex h-md-100 align-items-center">
-    <div class="col-md-6 p-0 bg-indigo h-md-100" data-aos="fade-right">
-      <div class="text-white d-md-flex align-items-center h-100 p-5 text-center justify-content-center">
-        <div class="logoarea pt-5 pb-5">
-          <p>
-            <i class="fas fa-star-and-crescent fa-3x"></i>
-          </p>
-          <!-- <h1 class="mb-0 mt-3 display-4">Anchor</h1> -->
-          <h1><strong class="title-gradient mb-0 mt-3">Program Station</strong></h1>
-          <h5 class="font-weight-light mb-4" style="font-weight: 900 !important;">
-            With this FREE Bootstrap 5.3.2
-            <strong> UI Kit</strong>
-          </h5>
-          <a class="btn btn-outline-white btn-lg btn-round hidden" href="https://v5.bootcss.com/">
-            <i class="fab fa-bootstrap"></i> Bootstrap
-          </a>
-        </div>
-      </div>
-    </div>
     <!-- class = loginarea -->
-    <div class="container col-md-6 p-0 bg-white h-md-100" data-aos="fade-left">
+    <div class="container col-md-6 p-0 bg-white h-md-100" data-aos="zoom-in">
       <div class=" d-md-flex align-items-center h-md-100 p-5 justify-content-center">
         <div class="col-md-9">
           <form class="border rounded p-5 " @submit.prevent="register">
-            <h3 class="mb-4 text-center">Sign Up</h3>
-            <div class="form-group">
-              <input type="text" v-model="username" class="form-control" id="exampleInputUsername1" placeholder="用户名"
-                required="请输入用户名">
-            </div>
+            <h3 class="mb-4 text-center">Forgot Password</h3>
 
+            <!-- 邮箱 -->
             <div class="form-group">
               <input type="email" class="form-control" v-model="email" id="exampleInputEmail1" @input="validateEmail"
                 aria-describedby="emailHelp" placeholder="邮箱" required="请输入邮箱">
               <div style="margin-left: 2px;color: red;font-weight: 900;">{{ email_status }}</div>
             </div>
 
+            <!-- 获取 -->
             <div class="form-group input-group">
               <input type="text" v-model="verification_code" class="form-control" placeholder="验证码" required="请输入验证码">
-              <button class="btn btn-outline-primary" type="button" id="button-addon3"
+              <button class="btn btn-outline-primary" type="button" id="button-addon2"
                 :disabled="!isValidEmail || countdown > 0" @click="send_verification">获取
               </button>
             </div>
@@ -52,7 +32,7 @@
             </div>
             <div style="margin-bottom: 1rem;margin-left: 2px;color: red;font-weight: 900;">{{ password_status }}</div>
 
-            <button type="submit" class="btn btn-success btn-round btn-block shadow-sm">注册</button>
+            <button type="submit" class="btn btn-success btn-round btn-block shadow-sm">修改密码</button>
 
           </form>
         </div>
@@ -68,11 +48,10 @@
 <script>
 import $ from 'jquery';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+// import { useRouter } from 'vue-router';
 
 export default {
-  name: 'RegisterView',
+  name: 'ForgotPasswordView',
   components: {
   },
   data() {
@@ -80,8 +59,6 @@ export default {
   methods: {
   },
   setup() {
-    // 用户名
-    const username = ref('');
     // 定义邮箱的输入，双向绑定
     const email = ref('');
     // 验证码
@@ -102,7 +79,7 @@ export default {
       startCountdown();
       // console.log("send_verification", email.value);
       $.ajax({
-        url: "https://localhost:8082/api/send/verification",
+        url: "https://localhost:8082/api/send_forgotPassword/verification",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
@@ -132,20 +109,19 @@ export default {
         countdown.value--;
         if (countdown.value > 0) {
           // 更新按钮文本显示剩余秒数
-          $('#button-addon3').text(`${countdown.value} 秒`);
+          $('#button-addon2').text(`${countdown.value} 秒`);
         } else {
           // 取消倒计时函数
           clearInterval(timer);
           // 倒计时结束后，重置按钮状态
-          $('#button-addon3').text('获取');
+          $('#button-addon2').text('获取');
         }
       }, 1000);
     };
 
 
     // 密码，确认密码和密码状态
-    const store = useStore();
-    const router = useRouter();
+    // const router = useRouter();
     const password = ref('');
     const confirm_password = ref('');
     const password_status = ref('');
@@ -157,12 +133,11 @@ export default {
         // console.log("register --------: ");
         password_status.value = '';
         $.ajax({
-          url: "https://localhost:8082/api/verify/verification",
+          url: "https://localhost:8082/api/verify_forgotPassword/verification",
           // url: "https://localhost:8082/api/verify/verification",
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify({
-            name: username.value,
             email_receiver: email.value,
             verification_code: parseInt(verification_code.value),
             password: password.value,
@@ -170,10 +145,9 @@ export default {
           dataType: "json",
           success(resp) {
             // 说明注册成功
-            password_status.value = "";
-            store.dispatch("user/updateUser", resp);
-            console.log(resp);
-            router.push({name: "home"});
+            password_status.value = resp;
+            // store.dispatch("user/updateUser", resp);
+            // router.push({name: "home"});
           },
           error(xhr, textStatus, errorThrown) {
             // email_status.value = "邮箱已有账号";
@@ -186,7 +160,6 @@ export default {
     };
 
     return {
-      username, // 用户名
       email,    // 邮箱
       isValidEmail,
       validateEmail,

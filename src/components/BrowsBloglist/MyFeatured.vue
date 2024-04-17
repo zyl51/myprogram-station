@@ -2,7 +2,8 @@
   <!------------------------------------------
 HEADER
 ------------------------------------------->
-  <div class="jumbotron jumbotron-md jumbotron-fluid mb-12 bg-primary position-relative">
+  <div class="jumbotron jumbotron-md jumbotron-fluid mb-12 bg-primary position-relative" 
+  data-aos="fade-down">
     <div class="container text-white h-100 tofront">
       <div class="row align-items-center justify-content-center text-center">
         <div class="col-md-10">
@@ -16,19 +17,18 @@ HEADER
   <!-- End Header -->
 
 
-  <section class="pt-5 pb-5" data-aos="fade-down">
+  <section class="pt-5 pb-5">
     <div class="container">
-
       <!-- Featured -->
       <div class="row gap-y">
-        <div v-for="(post, index) in posts" :key="post.id" class="col-lg-12">
+        <div v-for="(post, index) in posts" :key="post.id" class="col-lg-12" data-aos="fade-up">
           <div class="card flex-md-row mb-4 box-shadow h-xl-300 post-hover">
             <!-- <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url"> -->
             <div class="card-body d-flex flex-column align-items-start">
               <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name }}</strong>
               <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name }}</strong>
               <h3 class="mb-0">
-                <router-link class="text-dark" :to="{name: 'blog', params: {postId: post.id}}">
+                <router-link class="text-dark" :to="{name: 'blog', params: {post_id: post.id}}">
                   {{ post.title }}
                 </router-link>
               </h3>
@@ -39,7 +39,7 @@ HEADER
                   <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"/>
                 </router-link> -->
               <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content" style="font-size: 17px;" />
-              <router-link class="text-gray" :to="{name: 'blog', params: {postId: post.id}}">
+              <router-link class="text-gray" :to="{name: 'blog', params: {post_id: post.id}}">
                 Continue reading
               </router-link>
               <!-- <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a> -->

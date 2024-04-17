@@ -7,6 +7,9 @@ import RegisterView from '@/views/RegisterView.vue';
 import BlogView from '@/views/BlogView.vue';
 import EditorView from '@/views/EditorView.vue';
 import SearchView from '@/views/SearchView.vue';
+import UserProfileView from '@/views/UserProfileView.vue';
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue';
+import UserProfilePersonalView from '@/views/UserProfilePersonalView.vue';
 
 const routes = [
   {
@@ -39,7 +42,7 @@ const routes = [
     component: RegisterView,
   },
   {
-    path: '/blog/:postId/',
+    path: '/blog/:post_id/',
     name: 'blog',
     component: BlogView,
   },
@@ -52,12 +55,27 @@ const routes = [
     path: '/search/',
     name: 'search',
     component: SearchView,
+  },
+  {
+    path: '/userProfile/:user_id/',
+    name: 'userProfile',
+    component: UserProfileView,
+  },
+  {
+    path: '/forgotPassword/',
+    name: 'forgotPassword',
+    component: ForgotPasswordView,
+  },
+  {
+    path: '/userProfilePersonal/',
+    name: 'userProfilePersonal',
+    component: UserProfilePersonalView,
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 export default router

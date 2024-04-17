@@ -61,6 +61,7 @@ const ModuleRecommend = {
   actions: {
     // 用于初始化数据
     initializeData(context) {
+      // console.log("", context.rootState.IP_PORT);
       // 
       const recommend = reactive({
         posts: [],
@@ -114,6 +115,7 @@ const ModuleRecommend = {
 // *************************************************************************
     // 修改 currrntPage 页数
     updateCurrentPage(context, data) {
+      context.commit("updatePosts", {});
       // console.log("actions updateCurrentPage ", data.page);
       $.ajax({
         url: "https://localhost:8082/api/recommend/postlist/" + data.page,

@@ -11725,6 +11725,9 @@ a {
   }
 }
 @media (min-width: 1200px) and (max-width: 1919.98px) {
+  .h-xl-200 {
+    height: 200px;
+  }
   .h-xl-300 {
     height: 300px;
   }

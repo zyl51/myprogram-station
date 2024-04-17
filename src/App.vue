@@ -28,10 +28,8 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 // <!-- Main CSS -->
 import '@/assets/css/main.css';
 // <!-- Animation CSS -->
-import '@/assets/css/vendor/aos.css';
-// import $ from 'jquery';
-// import Share from 'share.js';
-import AOS from 'aos';
+// import AOS from 'aos';
+// import 'aos/dist/aos.css';
 
 import MyNavbar from './components/MyNavbar.vue';
 
@@ -40,18 +38,18 @@ export default {
   components: {
     MyNavbar,
   },
-  mounted() {
-    AOS.init({
-      duration: 700
-    });
+  // mounted() {
+  //   AOS.init({
+  //     duration: 700
+  //   });
 
-    AOS.init({
-      disable: function () {
-        var maxWidth = 1200;
-        return window.innerWidth < maxWidth;
-      }
-    });
-  },
+  //   AOS.init({
+  //     disable: function () {
+  //       var maxWidth = 1200;
+  //       return window.innerWidth < maxWidth;
+  //     }
+  //   });
+  // },
 }
 </script>
 

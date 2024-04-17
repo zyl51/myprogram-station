@@ -6,10 +6,12 @@ import ModuleUser from './user'
 export default createStore({
   state: {
     // 存储所有的数据
+    IP_PORT: "127.0.0.1:8082"
   },
   getters: {
     // 想获取 state 的内容并且需要通过一定计算的时候放进这里面进行获取
     // 只能读取，不能修改
+    IP_PORT: state => state.IP_PORT
   },
   mutations: {
     // 对 state 数据进行直接修改

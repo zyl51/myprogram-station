@@ -1,9 +1,45 @@
 <template>
   <div class="container" style="margin-top: 100px;">
-    <div class="card">
+
+    <!-- confirm_delete -->
+    <div v-if="is_confirm_delete_post" class="card confirm_delete">
       <div class="card-body">
+        <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"
+          >确认删除该帖子吗？
+        </h5>
+        <div class="row">
+          <div class="col-1"></div>
+          <button @click="delete_post(post.id)" class="btn btn-primary col-4 btn-sm" style="background-color: #ef0000;">确定</button>
+          <div class="col-2"></div>
+          <button @click="confirm_delete_post" class="btn btn-primary col-4 btn-sm">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 已经删除 -->
+    <div v-if="show_id_deleted" class="card confirm_delete" style="width: 18rem;z-index: 1;">
+      <div class="card-body">
+        <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"
+          >{{ deleted_message }}
+        </h5>
+        <div class="row">
+          <div class="col-4"></div>
+          <button @click="confirm" class="btn btn-primary col-4 btn-sm">确定</button>
+          <div class="col-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body"  data-aos="fade-up">
         <!-- 标题和信息部分 start -->
-        <div id="title">{{ post.title }}</div>
+        <div class="row">
+          <div id="title" class="col-10">{{ post.title }}</div>
+          <div v-if="is_me || is_admin" class="col-2">
+            <button type="button" @click="confirm_delete_post" class="btn btn-sm btn-primary"
+              style="background-color: #DC3545;">删除</button>
+          </div>
+        </div>
         <!-- <div id="title"> 标题 </div> -->
         <!-- 用户信息 -->
         <div id="author">
@@ -12,11 +48,15 @@
           <a class="head-and-name" href="#">
             <!-- 头像 -->
             <div id="author-head-image" class="inline-block-class">
-              <img :src="user.avatar_url" alt="头像" style="border-radius: 50%;">
+              <router-link :to="{ name: 'userProfile', params: {user_id: user.id ? user.id : -1} }">
+                <img :src="user.avatar_url" alt="头像" style="border-radius: 50%;">
+              </router-link>
             </div>
             <div class="inline-block-class" style="margin-right: 7px;"></div>
             <!-- 用户名 -->
-            <div id="author-name" class="inline-block-class">{{ user.name }}</div>
+            <router-link id="author-name" class="inline-block-class"
+            :to="{ name: 'userProfile', params: {user_id: user.id ? user.id : -1} }"
+            >{{ user.name }}</router-link>
           </a>
           <!-- <div class="inline-block-class" style="margin-right: 10px;"></div> -->
           <!-- 日期 -->
@@ -36,9 +76,7 @@
     </div>
 
     <div style="margin-top: 20px;"></div>
-    <MyExchange >
-
-    </MyExchange>
+    <MyExchange :post_of_user_id="post.user_id" />
 
   </div>
 </template>
@@ -47,8 +85,9 @@
 import { VMarkdownView } from 'vue3-markdown';
 import 'vue3-markdown/dist/style.css';
 import $ from 'jquery';
-import { reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
 
 import MyExchange from '@/components/BrowsBlog/MyExchange.vue';
 
@@ -58,69 +97,140 @@ export default {
     VMarkdownView,
     MyExchange,
   },
-  props: {
-  },
   data() {
-    
+
   },
   methods: {
   },
   setup() {
     const route = useRoute();
-    const postId = ref(route.params.postId);
+    const post_id = ref(route.params.post_id);
     // 获取单个帖子
+    const store = useStore();
+    const is_admin = computed(() => {
+      return store.getters['user/getIsAdmin'];
+    });
+    const user_id = computed(() => {
+      return store.getters['user/getUserId'];
+    });
+    const is_me = ref(false);
 
     const post = reactive({});
     const user = reactive({});
 
     // 获取单个帖子和单个用户
     $.ajax({
-        url: "https://localhost:8082/api/post/" + postId.value,
-        type: "GET",
-        data: {
-        },
+      url: "https://localhost:8082/api/post/" + post_id.value,
+      type: "GET",
+      data: {
+      },
+      dataType: "json",
+      success(resp) {
+        // console.log("success post");
+        post.id = resp.id;
+        post.title = resp.title;
+        post.release_time = resp.release_time;
+        post.cover_url = resp.cover_url;
+        post.content = resp.content;
+        post.user_id = resp.user_id;
+        post.user_name = resp.user_name;
+
+        is_me.value = (post.user_id === user_id.value);
+        // console.log(is_me.value);
+        $.ajax({
+          url: "https://localhost:8082/api/user/" + post.user_id,
+          type: "GET",
+          data: {
+          },
+          dataType: "json",
+          success(resp) {
+            user.id = resp.id;
+            user.name = resp.name;
+            // user.register_time = resp.register_time;
+            user.avatar_url = resp.avatar_url;
+            console.log(resp.avatar_url);
+          },
+          error(textStatus, errorThrown) {
+            console.error("get user: ", textStatus, errorThrown);
+          }
+        });
+
+      },
+      error(textStatus, errorThrown) {
+        console.error("get post: ", textStatus, errorThrown);
+      }
+    });
+
+    // console.log(post);
+
+    // console.log(user_id.value, post.user_id);
+    
+    const is_confirm_delete_post = ref(false);
+    // 确认删除吗
+    const confirm_delete_post = (() => {
+      is_confirm_delete_post.value = !is_confirm_delete_post.value;
+    });
+
+    const router = useRouter();
+    const show_id_deleted = ref(false);
+    const is_deleted = ref(false);
+    const deleted_message = ref('');
+
+    // 删除帖子函数
+    const delete_post = ((post_id) => {
+      // console.log("Start delete_post");
+      $.ajax({
+        url: "https://localhost:8082/api/delete_post",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          post_id: post_id,
+        }),
         dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + store.getters['user/getToken'],
+        },
         success(resp) {
-          // console.log("success post");
-          post.id = resp.id;
-          post.title = resp.title;
-          post.release_time = resp.release_time;
-          post.cover_url = resp.cover_url;
-          post.content = resp.content;
-          post.user_id = resp.user_id;
-          post.user_name = resp.user_name;
-
-          // post.value = { ...resp };
-
-          const user_id = post.user_id;
-          $.ajax({
-            url: "https://localhost:8082/api/user/" + user_id,
-            type: "GET",
-            data: {
-            },
-            dataType: "json",
-            success(resp) {
-              user.id = resp.id;
-              user.name = resp.name;
-              // user.register_time = resp.register_time;
-              user.avatar_url = resp.avatar_url;
-            },
-            error(textStatus, errorThrown) {
-              console.error("get user: ", textStatus, errorThrown);
-            }
-          });
-
+          // router.push({name: "blog", params: {post_id: 0}});
+          // 隐藏是否确认删除
+          is_confirm_delete_post.value = false;
+          is_deleted.value = true;
+          // 显示弹窗
+          show_id_deleted.value = true;
+          deleted_message.value = "删除成功";
+          console.log("delete_post successful：", resp);
         },
         error(textStatus, errorThrown) {
-          console.error("get post: ", textStatus, errorThrown);
+
+          is_confirm_delete_post.value = false;
+          // 显示弹窗
+          show_id_deleted.value = true;
+          is_deleted.value = false;
+          deleted_message.value = "删除失败";
+          console.error("delete post: ", textStatus, errorThrown);
         }
       });
+    });
 
-      // console.log(post);
+    // 删除成功调用函数
+    const confirm = (() => {
+      show_id_deleted.value = false;
+      if (is_deleted.value == true) {
+        router.push({name: "blog", params: {post_id: 0}});
+      }
+    });
 
     return {
-      post: post,
-      user: user,
+      post,
+      user,
+      is_admin,
+      is_me,
+      is_confirm_delete_post,
+      confirm_delete_post,
+      delete_post,
+      show_id_deleted,
+      deleted_message,
+      confirm,
     }
   }
 };
@@ -132,6 +242,21 @@ hr {
   /* 移除默认的边框 */
   border-top: 1px solid rgb(112, 112, 112);
   /* 设置顶部边框的粗细和颜色 */
+}
+
+.confirm_delete {
+  position: fixed;
+  /* 使用固定定位 */
+  top: 50%;
+  /* 将顶部定位在屏幕的中间 */
+  left: 50%;
+  /* 将左侧定位在屏幕的中间 */
+  transform: translate(-50%, -50%);
+  /* 使用 transform 将元素向左上方移动其自身宽高的一半，使其完全位于屏幕中间 */
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 18rem;z-index: 1;
 }
 
 #title {
@@ -175,6 +300,7 @@ hr {
 
 #date {
   color: #ADA399;
+  /* color: #f60e0e; */
 }
 
 .user-photo {

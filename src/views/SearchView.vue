@@ -5,10 +5,9 @@
   <section class="pt-5 pb-5" data-aos="fade-down" style="margin-top: 50px;">
     <div class="container">
 
-
       <!-- Featured -->
       <div class="row gap-y">
-        <div v-for="(post, index) in posts" :key="post.id" class="col-lg-6">
+        <div v-for="(post, index) in posts" :key="post.id" class="col-lg-6" data-aos="fade-up">
           <div class="card flex-md-row mb-4 box-shadow h-xl-300 post-hover">
             <!-- <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url"> -->
             <div class="card-body d-flex flex-column align-items-start">
@@ -17,7 +16,7 @@
               <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name
                 }}</strong>
               <h3 class="mb-0">
-                <router-link class="text-dark" :to="{ name: 'blog', params: { postId: post.id } }">
+                <router-link class="text-dark" :to="{ name: 'blog', params: { post_id: post.id } }">
                   {{ post.title }}
                 </router-link>
               </h3>
@@ -29,7 +28,7 @@
                 </router-link> -->
               <VMarkdownView class="card-text mb-auto posts vmarkdown" :content="post.content"
                 style="font-size: 10px;" />
-              <router-link class="text-gray" :to="{ name: 'blog', params: { postId: post.id } }">
+              <router-link class="text-gray" :to="{ name: 'blog', params: { post_id: post.id } }">
                 Continue reading
               </router-link>
               <!-- <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a> -->
@@ -51,14 +50,11 @@
 <script>
 import { VMarkdownView } from 'vue3-markdown';
 import 'vue3-markdown/dist/style.css';
-
+import { useRouter } from 'vue-router';
 import { computed, ref, reactive, onMounted } from 'vue'; // 更改引入的 Vue 相关模块
-
-// import { useStore } from 'vuex';
 import $ from 'jquery';
 
 import MyPagination from '@/components/MyPagination.vue';
-import { useRouter } from 'vue-router';
 
 export default {
   name: "SearchView",

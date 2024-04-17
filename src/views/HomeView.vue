@@ -1,5 +1,8 @@
 <template>
   <!-- Start 首页导航 -->
+  <section data-aos="fade-up">
+
+  
   <div class="jumbotron jumbotron-lg jumbotron-fluid mb-0 pb-3 bg-primary position-relative">
     <div class="container-fluid text-white h-100">
       <div class="d-lg-flex align-items-center justify-content-between text-center pl-lg-5">
@@ -32,6 +35,7 @@
       d="M685.6 38.8 C418.7-11.1 170.2 9.9 0 30 v96 h1440 V30 C1252.7 52.2 1010 99.4 685.6 38.8z" fill="white"
       stroke="white" />
   </svg>
+</section>
   <!-- End 首页导航 -->
 
 <!-- CAROUSEL -->

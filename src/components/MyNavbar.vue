@@ -25,9 +25,14 @@
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'recommend', params: { page: currentPage } }">推荐</router-link>
           </li>
-          <li class="nav-item">
+          <!-- 关注导航 -->
+          <li v-if="$store.state.user.user.is_login" class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'follow', query: { user_id: user_id, page: page } }">关注</router-link>
+          </li>
+          <li v-else class="nav-item">
+            <div style="cursor: pointer;" class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
+              @click="routerLogin">关注</div>
           </li>
           <!-- <li class="nav-item">
             <router-link class="nav-link" :class="{ 'router-link-active-scrolled': scrolled }"
@@ -54,21 +59,49 @@
             <div class="nav-link search-button" :class="{ 'router-link-active-scrolled': scrolled }" id="searchButton"
               @click="showSearchPopup">搜索</div>
           </li>
-          <li class="nav-item">
+          <!-- 登录导航 -->
+          <li v-if="!is_login" class="nav-item">
             <router-link class="nav-link login" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'login' }">登录</router-link>
           </li>
-          <li class="nav-item">
+          <li v-else class="nav-item dropdown">
+            <a class="personal-info nav-link dropdown-toggle" :class="{ 'router-link-active-scrolled': scrolled }"
+              href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ username }}
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <!-- <router-link class="dropdown-item" >我的空间</router-link> -->
+                <a class="dropdown-item" href="#" @click="routerUserProfile">我的空间</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" @click="routerUserProfilePersonal">个人信息</a>
+              </li>
+            </ul>
+          </li>
+          <!-- 注册还是登出 -->
+          <li v-if="!$store.state.user.user.is_login" class="nav-item">
             <router-link class="nav-link register" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'register' }">注册</router-link>
           </li>
+          <li v-else class="nav-item">
+            <div class="nav-link register" :class="{ 'router-link-active-scrolled': scrolled }" @click="logout">登出</div>
+          </li>
+
           <!-- 发布按钮 -->
-          <li class="nav-item">
+          <li v-if="$store.state.user.user.is_login" class="nav-item">
             <router-link style="margin-left: 10px; margin-right: 10px;" class="btn btn-info btn-round btn-plus" :class="{ 'router-link-active-scrolled': scrolled }"
               :to="{ name: 'editor' }">
               <i class="fas fa-plus"></i>
               发帖
             </router-link>
+          </li>
+          <li v-else class="nav-item">
+            <div style="margin-left: 10px; margin-right: 10px;" class="btn btn-info btn-round btn-plus" :class="{ 'router-link-active-scrolled': scrolled }"
+              @click="routerLogin">
+              <i class="fas fa-plus"></i>
+              发帖
+            </div>
           </li>
         </ul>
       </div>
@@ -81,6 +114,7 @@ import { useStore } from 'vuex';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 
 import SearchPopup from '@/components/MyNavbarComponents/SearchPopup.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "MyNavbar",
@@ -91,9 +125,13 @@ export default {
     // data 用于定义所需要使用到的数据 
     return {
       isShowSearchPopup: false,
-    }
+    };
   },
   methods: {
+    // 跳转登录
+    routerLogin() {
+      this.$router.push({name: "login"});
+    },
     // 定义函数，methods 可以使用 this
     // 可以展示显示组件 SearchPopup
     showSearchPopup() {
@@ -131,19 +169,47 @@ export default {
       return store.getters['recommend/getCurrentPage'];
     });
 
+    // 用户id
     const user_id = computed(() => {
       return store.getters['user/getUserId'];
+    });
+
+    // 用户名
+    const username = computed(() => {
+      return store.getters['user/getUserName'];
+    });
+
+    const is_login = computed(() => {
+      return store.getters['user/getIsLogin'];
     });
 
     const page = computed(() => {
       return store.getters['follow/getCurrentPage'];
     });
 
+    const logout = () => {
+      store.dispatch('user/logout');
+    };
+
+    const router = useRouter();
+    const routerUserProfile = () => {
+      router.push({name: "userProfile", params: {user_id: user_id.value}})
+    };
+
+    const routerUserProfilePersonal = () => {
+      router.push({name: "userProfilePersonal"})
+    };
+
     return { 
       scrolled,
       currentPage,
       user_id,
+      username,
+      is_login,
       page,
+      logout,
+      routerUserProfile,
+      routerUserProfilePersonal,
     };
   },
 }
@@ -156,6 +222,10 @@ export default {
   color: white !important;
   transform: scale(1.2);
   transition: 100;
+}
+
+.personal-info:hover {
+  text-decoration: underline;
 }
 
 

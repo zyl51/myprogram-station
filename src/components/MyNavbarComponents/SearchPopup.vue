@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="searchPopup">
+  <div class="container" id="searchPopup" data-aos="zoom-out">
     <div class="card">
       <div class="card-body">
         <!-- @submit 是 Vue.js 的事件监听简写，用于监听表单的提交事件 -->

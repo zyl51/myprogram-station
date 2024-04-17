@@ -7,7 +7,7 @@ const ModuleFollow = {
     // 存储所有的数据 
     follow: reactive({
       posts: [],
-      currentPage: -1,
+      currentPage: 1,
       totalPages: 1,
       totalPosts: 1,
     }),
@@ -61,6 +61,7 @@ const ModuleFollow = {
   actions: {
     // 用于初始化数据
     initializeData(context, user_id) {
+      context.commit("updateFollow", {});
       // 关注的帖子
       const follow = reactive({
         posts: [],
@@ -69,15 +70,19 @@ const ModuleFollow = {
         totalPosts: 1,
       });
 
-      // 申请列表的数据
+      // 申请列表的数据.
       // 请求数据
+      // console.log("follow", context.rootState.user.user.token);
       $.ajax({
         url: "https://localhost:8082/api/follow/totalnumbers/" + user_id,
         type: "GET",
         data: {
 
         },
-        dataType: "json", 
+        dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + context.rootState.user.user.token,
+        },
         success(resp) {
           // 总帖子数和总页数
           follow.totalPosts = resp.number;
@@ -92,6 +97,9 @@ const ModuleFollow = {
               page: follow.currentPage,
             },
             dataType: "json",
+            headers: {// jwt 验证方式，直接抄就对了
+              "Authorization": "Bearer " + context.rootState.user.user.token,
+            },
             success (resp) {
               // console.log(Math.ceil(0.1));
               follow.posts = resp;
@@ -120,6 +128,9 @@ const ModuleFollow = {
           page: data.page,
         },
         dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + context.rootState.user.user.token,
+        },
         success(resp) {
           context.commit("updatePosts", resp);
           context.commit("updateCurrentPage", data.page);
