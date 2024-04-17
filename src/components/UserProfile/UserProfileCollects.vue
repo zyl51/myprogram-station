@@ -41,6 +41,8 @@
 <script>
 import $ from 'jquery';
 import { ref } from 'vue';
+import { VMarkdownView } from 'vue3-markdown';
+import 'vue3-markdown/dist/style.css';
 
 import MyPagination from '@/components/MyPagination.vue';
 import { useStore } from 'vuex';
@@ -49,6 +51,7 @@ export default {
   name: "UserProfileCollects",
   components: {
     MyPagination,
+    VMarkdownView
   },
   props: {
 		user_id: {
@@ -120,6 +123,7 @@ export default {
       },
       success(resp) {
         posts.value = resp;
+        console.log(posts.value);
       },
       error(textStatus, errorThrown) {
         console.error("changePage: get user profile collect posts", textStatus, errorThrown);
@@ -146,5 +150,26 @@ export default {
   justify-content: center;
   /* background-color: #f8f9fa; 可以根据需要设置底部导航的背景颜色 */
   padding: 10px;
+}
+
+.posts {
+	display: -webkit-box;
+	-webkit-line-clamp: 6;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.vmarkdown {
+	box-sizing: border-box;
+	width: 100%;
+	/* 设置宽度为 100% */
+	height: auto;
+	/* 设置高度自动，保持原始的长宽比 */
+	padding: 0px 0px 0px 10px;
+}
+
+.card-body {
+	overflow: hidden;
+	/* 隐藏溢出的内容 */
 }
 </style>
