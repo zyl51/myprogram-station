@@ -13,7 +13,7 @@
           收藏
         </div>
         <div class="col-4 inline-block-class" style="text-align: center;">
-          <i class="fas fa-exclamation report"></i>
+          <i @click="report" class="fas fa-exclamation report"></i>
           举报
         </div>
       </div>
@@ -35,7 +35,7 @@ export default {
   props: {
 
   },
-  setup() {
+  setup(props, context) {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -142,11 +142,20 @@ export default {
       });
     }
 
+    const report = () => {
+      // 用户未登录
+      if (!is_login.value) {
+        router.push({name: "login"});
+      }
+      context.emit("report");
+    };
+
     return {
       is_like,
       is_collect,
       like,
       collect,
+      report,
     }
   }
 }

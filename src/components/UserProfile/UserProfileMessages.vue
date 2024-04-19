@@ -9,15 +9,15 @@
       <div class="inline-block-class" style="vertical-align: top;">
         <!-- <div class="inline-block-class">用户&ensp;</div> -->
         <div class="inline-block-class">
-          <router-link :to="{name: 'userProfile', params: {user_id: message.sender_id}}" class="head-and-name">{{ message.sender_name }}&ensp;</router-link>
+          <router-link style="font-weight: 600;" :to="{name: 'userProfile', params: {user_id: message.sender_id}}" class="head-and-name">{{ message.sender_name }}&ensp;</router-link>
         </div>
         <div></div>
-        <div v-if="message.status == 1" class="inline-block-class">点赞了</div>
-        <div v-if="message.status == 2" class="inline-block-class">收藏了</div>
-        <div v-if="message.status == 3" class="inline-block-class">评论了</div>
-        <div class="inline-block-class">帖子&ensp;</div>
+        <div v-if="message.status == 1" class="inline-block-class" style="color: red; font-weight: 900;">点赞了</div>
+        <div v-if="message.status == 2" class="inline-block-class" style="color: coral; font-weight: 900;">收藏了</div>
+        <div v-if="message.status == 3" class="inline-block-class" style="color: #502C6C; font-weight: 900;">评论了</div>
+        <div class="inline-block-class">&ensp;</div>
         <div class="inline-block-class">
-          <router-link :to="{name: 'blog', params: {post_id: message.post_id}}" class="head-and-name">{{ message.title }}&ensp;</router-link>
+          <router-link style="font-weight: 600;" :to="{name: 'blog', params: {post_id: message.post_id}}" class="head-and-name">{{ message.title }}&ensp;</router-link>
         </div>
       </div>
       <!-- 用户为管理员用户为帖子主人，用户为评论主任 -->
@@ -51,7 +51,7 @@ export default {
   components: {
 
   },
-  setup(props) {
+  setup(props, context) {
     const store = useStore();
     const messages = ref([]);
     const IP_PORT = store.getters.IP_PORT;
@@ -88,6 +88,7 @@ export default {
         },
         success(resp) {
           messages.value = messages.value.filter(message => message.id !== message_id);
+          context.emit("delete_message");
           console.log(resp);
         },
         error(textStatus, errorThrown) {

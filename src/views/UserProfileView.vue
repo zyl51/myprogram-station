@@ -36,11 +36,14 @@
                 <li class="nav-item" style="font-weight: 900;" v-for="(item, index) in tabs" :key="index">
                   <a class="nav-link" style="color: #502C6C;" :class="{ 'active': currentTab === item.component }" @click="currentTab = item.component" href="#">
                     {{ item.name }}
+                    <span v-if="item.name == '消息' && message_total != 0" class="badge badge-warning ml-2">
+                      {{ message_total }}
+                    </span>
                   </a>
                 </li>
               </ul>
 
-              <component :is="currentTab" :user_id="user_id"></component>
+              <component :is="currentTab" :user_id="user_id" @delete_message="delete_message"></component>
             </div>
           </div>
         </div>
@@ -169,12 +172,40 @@ export default {
       });
     };
 
+    const message_total = ref(0);
+    $.ajax({
+      url: "https://" + store.getters.IP_PORT + "/api/userprofile/message_total/" + user_id,
+      type: "GET",
+      data: {
+
+      },
+      dataType: "json",
+      headers: {// jwt 验证方式，直接抄就对了
+        "Authorization": "Bearer " + store.getters['user/getToken'],
+      },
+      success(resp) {
+        console.log("成功：", resp)
+        message_total.value = resp;
+      },
+      error(textStatus, errorThrown) {
+        console.error("get message", textStatus, errorThrown);
+      }
+    });
+
+    const delete_message = () => {
+      message_total.value = message_total.value - 1;
+      console.log("111");
+    };
+
+
     return {
       user_id,
       is_me,
       user,
       is_follow,
       follow,
+      message_total,
+      delete_message,
     }
   }
 }

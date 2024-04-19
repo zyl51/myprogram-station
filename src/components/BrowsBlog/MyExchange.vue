@@ -1,8 +1,9 @@
 <template>
   <!-- 点赞，收藏，举报， 评论-->
   <div class="card" data-aos="fade-up">
+
     <div class="card-body">
-      <LikeCollect />
+      <LikeCollect @report="report" />
 
       <!-- 评论 -->
       <div class="card">
@@ -69,7 +70,11 @@ export default {
   },
   methods: {
   },
-  setup() {
+  setup(props, context) {
+
+    const report = () => {
+      context.emit("report");
+    };
 
     const route = useRoute();
     const router = useRouter();
@@ -194,6 +199,7 @@ export default {
     };
 
     return {
+      report,
       user_comments,
       comment,
       submit_comment,
@@ -231,8 +237,6 @@ export default {
   border-radius: 50%;
 }
 
-
-
 .delete-button {
   /* margin-top: 10px; */
   /* margin-left: 2.5rem; */
@@ -240,4 +244,5 @@ export default {
   background-color: #DC3545;
   float: right;
 }
+
 </style>

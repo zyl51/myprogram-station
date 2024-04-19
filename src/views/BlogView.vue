@@ -1,6 +1,18 @@
 <template>
   <div class="container" style="margin-top: 100px;">
 
+    <div v-if="is_report" class="card my-report">
+      <div class="card-body">
+        <textarea v-model="report_reason" class="form-control" rows="3" placeholder="说明举报的原因" required=""></textarea>
+        <div class="row" style="margin-top: 3%;">
+          <div class="col-2"></div>
+          <button @click="report" class="btn btn-danger col-3 btn-sm">取消</button>
+          <div class="col-2"></div>
+          <button @click="confirm_report" class="btn btn-primary col-3 btn-sm">确定</button>
+        </div>
+      </div>
+    </div>
+
     <!-- confirm_delete -->
     <div v-if="is_confirm_delete_post" class="card confirm_delete">
       <div class="card-body">
@@ -76,7 +88,7 @@
     </div>
 
     <div style="margin-top: 20px;"></div>
-    <MyExchange :post_of_user_id="post.user_id" />
+    <MyExchange :post_of_user_id="post.user_id" @report="report" />
 
   </div>
 </template>
@@ -220,6 +232,43 @@ export default {
       }
     });
 
+
+    // 举报模块
+    const is_report = ref(false);
+    const report_reason = ref('');
+    const report = () => {
+      is_report.value = !is_report.value;
+    };
+
+    // 确认举报
+    const confirm_report = () => {
+      // console.log(user_id.value, post_id.value, report_reason.value);
+      $.ajax({
+        url: "https://" + store.getters.IP_PORT + "/api/report/submit",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          user_id: user_id.value,
+          post_id: parseInt(post_id.value),
+          report_reason: report_reason.value,
+        }),
+        dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + store.getters['user/getToken'],
+        },
+        success() {
+          is_report.value = false;
+          show_id_deleted.value = true;
+          deleted_message.value = "举报成功";
+        },
+        error(textStatus, errorThrown) {
+          show_id_deleted.value = true;
+          deleted_message.value = "举报失败，稍后重试";
+          console.error("submit report error", textStatus, errorThrown);
+        }
+      });
+    };
+
     return {
       post,
       user,
@@ -231,6 +280,10 @@ export default {
       show_id_deleted,
       deleted_message,
       confirm,
+      is_report,
+      report_reason,
+      report,
+      confirm_report,
     }
   }
 };
@@ -308,4 +361,22 @@ hr {
   height: 48px;
   border-radius: 50%;
 }
+
+.my-report {
+  position: fixed;
+  /* 使用固定定位 */
+  top: 50%;
+  /* 将顶部定位在屏幕的中间 */
+  left: 50%;
+  /* 将左侧定位在屏幕的中间 */
+  transform: translate(-50%, -50%);
+  /* 使用 transform 将元素向左上方移动其自身宽高的一半，使其完全位于屏幕中间 */
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 50%;
+  height: auto;
+  z-index: 1;
+}
+
 </style>
