@@ -10,6 +10,7 @@ import SearchView from '@/views/SearchView.vue';
 import UserProfileView from '@/views/UserProfileView.vue';
 import ForgotPasswordView from '@/views/ForgotPasswordView.vue';
 import UserProfilePersonalView from '@/views/UserProfilePersonalView.vue';
+import ManagementCenterView from '@/views/ManagementCenterView.vue';
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
     path: '/userProfilePersonal/',
     name: 'userProfilePersonal',
     component: UserProfilePersonalView,
+  },
+  {
+    path: '/managementCenter/',
+    name :'managementCenter',
+    component: ManagementCenterView,
   }
 ]
 

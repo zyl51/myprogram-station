@@ -77,6 +77,9 @@
               <li>
                 <a class="dropdown-item" href="#" @click="routerUserProfilePersonal">个人信息</a>
               </li>
+              <li v-if="is_admin">
+                <a class="dropdown-item" href="#" @click="routerManagementCenter">管理中心</a>
+              </li>
             </ul>
           </li>
           <!-- 注册还是登出 -->
@@ -183,6 +186,10 @@ export default {
       return store.getters['user/getIsLogin'];
     });
 
+    const is_admin = computed(() => {
+      return store.getters['user/getIsAdmin'];
+    });
+
     const page = computed(() => {
       return store.getters['follow/getCurrentPage'];
     });
@@ -200,16 +207,22 @@ export default {
       router.push({name: "userProfilePersonal"})
     };
 
+    const routerManagementCenter = () => {
+      router.push({name: "managementCenter"});
+    };
+
     return { 
       scrolled,
       currentPage,
       user_id,
       username,
       is_login,
+      is_admin,
       page,
       logout,
       routerUserProfile,
       routerUserProfilePersonal,
+      routerManagementCenter,
     };
   },
 }

@@ -73,7 +73,7 @@ const ModuleRecommend = {
       // 申请列表的数据
       // 请求数据
       $.ajax({
-        url: "https://localhost:8082/api/recommend/totalnumbers",
+        url: "https://" + context.rootState.IP_PORT + "/api/recommend/totalnumbers",
         type: "GET",
         data: {
 

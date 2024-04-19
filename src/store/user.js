@@ -74,11 +74,12 @@ const ModuleUser = {
       state.user.fans = 0,
       state.user.token = "";
       state.user.is_login = false;
+      state.user.is_admin = false;
     }
   },
   actions: {
 
-    // 注册完成之后的函数
+    // 登录和注册完成之后的函数
     updateUser(context, data) {
       const user = reactive({
         id: 3,
@@ -100,8 +101,28 @@ const ModuleUser = {
       localStorage.setItem('token', data.token);
       user.is_login = true;
 
-      console.log(user);
+      // console.log(user);
       context.commit("updateUser", user);
+
+      // 获取用户是否是管理员
+      $.ajax({
+        url: "https://" + context.rootState.IP_PORT + "/api/user/admin/" + user.id,
+        type: "GET",
+        data: {
+
+        },
+        dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + localStorage.getItem('token'),
+        },
+        success(resp) {
+          context.commit("updateIsAdmin", resp);
+          // console.log("get is admin", resp);
+        },
+        error(textStatus, errorThrown) {
+          console.error("updateUser: get admin: ", textStatus, errorThrown);
+        }
+      });
 
       // 周期函数，用来获取新 token 和用户数据
       setInterval(() => {
@@ -118,6 +139,7 @@ const ModuleUser = {
           success(resp) {
             // 验证成功
             context.commit("updateUser", resp);
+            context.commit("updateToken", resp.token);
           },
           error(textStatus, errorThrown) {
             console.error("updateUser: get user info through token: ", textStatus, errorThrown);
@@ -142,7 +164,7 @@ const ModuleUser = {
         success(resp) {
           // 验证成功
           context.dispatch("updateUser", resp);
-          console.log("token_get_userinfo", resp);
+          // console.log("token_get_userinfo", resp);
         },
         error(textStatus, errorThrown) {
           console.error("get user info through token: ", textStatus, errorThrown);

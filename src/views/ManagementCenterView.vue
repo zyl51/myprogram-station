@@ -16,15 +16,7 @@
       </div>
       <!-- <div>个人中心</div> -->
       <div class="row">
-        <div class="col-3">
-          <div class="card" data-aos="fade-right">
-            <div class="card-body" style="padding: 0.7rem;">
-              <img :src="user.avatar_url" style="width: 100%;" class="img-fluid" alt="头像">
-            </div>
-          </div>
-        </div>
-
-        <div class="col-9">
+        <div class="col-12">
           <div class="card">
             <div class="card-body">
               <div class="input-group mb-3">
@@ -57,7 +49,7 @@ import $ from 'jquery';
 // import { useRouter } from 'vue-router';
 
 export default {
-  name: "UserProfilePersonalView",
+  name: "ManagementCenterView",
   components: {
 
   },

@@ -32,7 +32,6 @@
         <div class="col-9">
           <div class="card">
             <div class="card-body">
-
               <ul class="nav nav-tabs">
                 <li class="nav-item" style="font-weight: 900;" v-for="(item, index) in tabs" :key="index">
                   <a class="nav-link" style="color: #502C6C;" :class="{ 'active': currentTab === item.component }" @click="currentTab = item.component" href="#">

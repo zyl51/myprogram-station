@@ -22,7 +22,9 @@
               <img class="user-photo" :src="usercomment.avatar_url" alt="头像">
             </div>
             <div class="inline-block-class" style="vertical-align: top;">
-              <div class="inline-block-class"><a href="#" class="head-and-name">{{ usercomment.username }}</a></div>
+              <div class="inline-block-class">
+                <router-link :to="{name: 'userProfile', params: {user_id: usercomment.user_id}}" href="#" class="head-and-name">{{ usercomment.username }}</router-link>
+              </div>
               <div style="color: #ADA399; font-size: 8px;">{{ usercomment.release_time }}</div>
             </div>
             <!-- 用户为管理员用户为帖子主人，用户为评论主任 -->
@@ -143,7 +145,7 @@ export default {
         },
         success(resp) {
           // 成功出表新数据
-          console.log("submit_comment is successful", resp);
+          // console.log("submit_comment is successful", resp);
           const new_comment = {
             id: resp,
             post_id: post_id.value,
