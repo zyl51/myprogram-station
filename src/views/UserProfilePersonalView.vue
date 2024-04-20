@@ -110,7 +110,7 @@ export default {
     });
     const IP_PORT = store.getters.IP_PORT;
 
-    const username = ref('');
+    const username = ref(store.getters['user/getUserName']);
     // 监听变化
     watch(() => store.getters['user/getUserName'], (newValue) => {
       username.value = newValue;

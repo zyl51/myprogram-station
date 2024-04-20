@@ -118,7 +118,7 @@ export default {
         dataType: "json",
         success(resp) {
           // console.log(resp);
-          totalPages.value = resp.total;
+          totalPages.value = Math.ceil(resp.total / 20);
           posts.length = 0;
           posts.push(...resp.posts);
         },

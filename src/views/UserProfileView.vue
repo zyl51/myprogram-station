@@ -33,14 +33,17 @@
           <div class="card">
             <div class="card-body">
               <ul class="nav nav-tabs">
-                <li class="nav-item" style="font-weight: 900;" v-for="(item, index) in tabs" :key="index">
-                  <a class="nav-link" style="color: #502C6C;" :class="{ 'active': currentTab === item.component }" @click="currentTab = item.component" href="#">
-                    {{ item.name }}
-                    <span v-if="item.name == '消息' && message_total != 0" class="badge badge-warning ml-2">
-                      {{ message_total }}
-                    </span>
-                  </a>
-                </li>
+                <div v-for="(item, index) in tabs" :key="index">
+                  <li v-if="item.name == '文章' || is_me" class="nav-item" style="font-weight: 900;">
+                    <a class="nav-link" style="color: #502C6C;" :class="{ 'active': currentTab === item.component }"
+                      @click="currentTab = item.component" href="#">
+                      {{ item.name }}
+                      <span v-if="item.name == '消息' && message_total != 0" class="badge badge-warning ml-2">
+                        {{ message_total }}
+                      </span>
+                    </a>
+                  </li>
+                </div>
               </ul>
 
               <component :is="currentTab" :user_id="user_id" @delete_message="delete_message"></component>
@@ -87,7 +90,7 @@ export default {
   setup() {
     const route = useRoute();
     const store = useStore();
-    
+
     // console.log("toekn is: ", token.value);
     const user_id = parseInt(route.params.user_id);
     const user_profile_id = computed(() => {

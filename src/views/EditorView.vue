@@ -16,7 +16,7 @@
           <canvas id="outputImage"></canvas>
         </div>
         <div style="text-align: center;">
-          <button class="btn btn-primary" @click="sumbit" >确定</button>
+          <button class="btn btn-primary" @click="sumbit">确定</button>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
 
     <div class="editor-container" data-aos="zoom-out">
       <br>
-      <VMarkdownEditor class="editor" v-model="content" locale="zh" :upload-action="handleUpload" />
+      <VMarkdownEditor class="editor" v-model="content" locale="en" :upload-action="handleUpload" />
     </div>
     <div>
       <button class="btn btn-primary" @click="confirm_window">提交</button>
@@ -89,7 +89,7 @@ export default {
     cropImage() {
       let img = new Image();
       img.src = this.image;
-      img.onload = function() {
+      img.onload = function () {
         let canvas = document.getElementById('outputImage');
         let ctx = canvas.getContext('2d');
         let size = Math.min(img.width, img.height);
@@ -111,8 +111,7 @@ $$
 累乘 \\prod_{i=1}^n\\quad
 极限 \\lim\\limits_{x\\to0}x^2\\quad 
 积分 \\int_a^b x^2 dx
-$$
-    `);
+$$`);
 
     const store = useStore();
     // 上传图片
@@ -137,7 +136,7 @@ $$
           },
           error(textStatus, errorThrown) {
             console.error("submit image error", textStatus, errorThrown);
-            reject(textStatus); 
+            reject(textStatus);
           }
         });
       });
@@ -164,7 +163,7 @@ $$
       // console.log(content.value);
       let canvas = document.getElementById('outputImage');
       // 将canvas内容转换为Blob对象
-      canvas.toBlob(function(blob) {
+      canvas.toBlob(function (blob) {
         // 创建一个FormData对象
         let formData = new FormData();
         // 将Blob对象添加到FormData对象中
@@ -194,7 +193,7 @@ $$
               data: JSON.stringify({
                 title: title.value,
                 cover_url: cover_url,
-                content: content.value, 
+                content: content.value,
                 user_id: user_id.value,
                 user_name: username.value,
               }),
@@ -203,7 +202,7 @@ $$
               },
               dataType: "json",
               success(resp) {
-                router.push({name: "blog", params: {post_id: resp}});
+                router.push({ name: "blog", params: { post_id: resp } });
                 console.log(resp);
               },
               error(textStatus, errorThrown) {
@@ -250,7 +249,9 @@ $$
 }
 
 .my_label {
-  color: #502C6C;font-weight: 900;background-color: white;
+  color: #502C6C;
+  font-weight: 900;
+  background-color: white;
 }
 
 .title {
@@ -258,6 +259,7 @@ $$
   font-weight: 900;
   color: #502C6C;
 }
+
 @media(max-width: 768px) {
   .submit_window {
     width: 15rem;
@@ -276,6 +278,5 @@ $$
   width: 100%;
   height: 80vh;
   overflow: auto;
-  /* border-right: 1px solid #ccc; */
 }
 </style>
