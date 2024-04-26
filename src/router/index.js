@@ -56,6 +56,7 @@ const routes = [
     path: '/search/',
     name: 'search',
     component: SearchView,
+    meta: { refreshData: true },
   },
   {
     path: '/userProfile/:user_id/',

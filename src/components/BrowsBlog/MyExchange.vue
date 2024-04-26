@@ -20,11 +20,14 @@
           <div v-for="usercomment in user_comments" :key="usercomment.id">
             <!-- vertical-align: top; 头像和用户名在垂直方向上对齐-->
             <div class="inline-block-class" style="margin-right: 10px; vertical-align: top;">
-              <img class="user-photo" :src="usercomment.avatar_url" alt="头像">
+              <router-link :to="{name: 'userProfile', params: {user_id: usercomment.user_id}}">
+                <img class="user-photo" :src="usercomment.avatar_url" alt="头像">
+              </router-link>
             </div>
             <div class="inline-block-class" style="vertical-align: top;">
               <div class="inline-block-class">
-                <router-link :to="{name: 'userProfile', params: {user_id: usercomment.user_id}}" href="#" class="head-and-name">{{ usercomment.username }}</router-link>
+                <router-link :to="{name: 'userProfile', params: {user_id: usercomment.user_id}}" class="head-and-name">{{ usercomment.username }}</router-link>
+                <span v-if="usercomment.user_id === post_of_user_id" class="badge badge-pill badge-primary ml-2">作者</span>
               </div>
               <div style="color: #ADA399; font-size: 8px;">{{ usercomment.release_time }}</div>
             </div>

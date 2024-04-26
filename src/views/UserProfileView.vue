@@ -6,7 +6,9 @@
         <div class="col-3">
           <div class="card" data-aos="fade-right">
             <div class="card-body" style="padding: 0.7rem;">
-              <img :src="user.avatar_url" style="width: 100%;" class="img-fluid" alt="头像">
+              <a :href="user.avatar_url" target="_blank">
+                <img :src="user.avatar_url" style="width: 100%;" class="img-fluid" alt="头像">
+              </a>
               <hr>
               <div style="font-weight: 800;text-align: center;font-size: 1rem;">{{ user.name }}</div>
               <hr>
@@ -20,7 +22,11 @@
                 <div class="col-6" style="text-align: center;font-weight: 400;">{{ user.fans }}</div>
               </div>
               <div v-if="!is_me" style="text-align: center;">
-                <button v-if="!is_follow" @click="follow(1)" type="button"
+                <router-link v-if="!is_login" class="follow-button btn-primary col-4"
+                 :to="{name: 'login'}">
+                 +关注
+                </router-link>
+                <button v-else-if="!is_follow" @click="follow(1)" type="button"
                   class="follow-button btn-primary col-4">+关注</button>
                 <button v-else @click="follow(-1)" type="button" class="follow-button btn-primary col-6">取消关注</button>
               </div>
@@ -200,6 +206,9 @@ export default {
       console.log("111");
     };
 
+    const is_login = computed(() => {
+      return store.getters['user/getIsLogin'];
+    });
 
     return {
       user_id,
@@ -209,6 +218,7 @@ export default {
       follow,
       message_total,
       delete_message,
+      is_login,
     }
   }
 }

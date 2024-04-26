@@ -4,8 +4,7 @@
 
       <div v-if="show_updated" class="card prompt-success" style="width: 18rem;z-index: 1;">
         <div class="card-body">
-          <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"
-            > 修改成功
+          <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"> 修改成功
           </h5>
           <div class="row">
             <div class="col-4"></div>
@@ -16,30 +15,79 @@
       </div>
       <!-- <div>个人中心</div> -->
       <div class="row">
-        <div class="col-3">
+        <div class="col-2">
           <div class="card" data-aos="fade-right">
             <div class="card-body" style="padding: 0.7rem;">
-              <img :src="user.avatar_url" style="width: 100%;" class="img-fluid" alt="头像">
+              <a :href="user.avatar_url" target="_blank">
+                <img :src="user.avatar_url" style="width: 100%;" class="img-fluid" alt="头像">
+              </a>
             </div>
           </div>
         </div>
 
-        <div class="col-9">
+        <!-- 修改用户的信息 -->
+        <div class="col-10">
           <div class="card">
-            <div class="card-body">
-              <div class="input-group mb-3">
-                <label class="input-group-text my_label">用户名</label>
-                <input type="text" v-model="username" class="form-control" id="inputGroupFile01" required="">
-                <button class="btn btn-primary" @click="sumbit_username" :disabled="!username">确定</button>
+            <div class="card-body row">
+              <div class="card col-6">
+                <div class="card-body">
+                <!-- 修改用户名 -->
+                <div class="input-group mb-3">
+                  <label class="input-group-text my_label">用户名</label>
+                  <input type="text" v-model="username" class="form-control" id="inputGroupFile01" required="">
+                  <button class="btn btn-primary" @click="sumbit_username" :disabled="!username">确定</button>
+                </div>
+                <!-- End 修改用户名 -->
+
+                <!-- 修改用户的头像 -->
+                <div class="input-group mb-3">
+                  <label class="input-group-text my_label">头像</label>
+                  <input type="file" @change="onFileChange" class="form-control" id="imageUpload" accept="image/*">
+                  <button class="btn btn-primary" @click="sumbit_avatar" :disabled="!have_file">确定</button>
+                </div>
+                <!-- End 修改用户的头像 -->
+
+                <!-- 用户头像预览 -->
+                <div class="row">
+                  <div class="col-1"></div>
+                  <div class="col-11">
+                    <canvas id="outputImage"></canvas>
+                  </div>
+                </div>
+                <!-- End 用户头像预览 -->
               </div>
-              <div class="input-group mb-3">
-                <label class="input-group-text my_label">头像</label>
-                <input type="file" @change="onFileChange" class="form-control" id="imageUpload" accept="image/*">
-                <button class="btn btn-primary" @click="sumbit_avatar" :disabled="!have_file">确定</button>
+
               </div>
-              <div class="col-md-6">
-                <canvas id="outputImage"></canvas>
+
+              <div class="col-1">
+
               </div>
+              
+              <div class="card col-5">
+                <div class="card-body">
+                <!-- 修改用户密码 -->
+                <form class="row" action="">
+                  <div class="input-group mb-3 col-12">
+                    <label class="input-group-text my_label">旧密码</label>
+                    <input type="password" v-model="old_password" class="form-control" id="inputGroupFile01" required="">
+                  </div>
+                  <div class="input-group mb-3 col-12">
+                    <label class="input-group-text my_label">新密码</label>
+                    <input type="password" v-model="new_password" class="form-control" id="inputGroupFile01" required="">
+                  </div>
+                  <div class="input-group mb-3 col-12">
+                    <label class="input-group-text my_label">确认密码</label>
+                    <input type="password" v-model="confirm_pasword" class="form-control" id="inputGroupFile01" required="">
+                  </div>
+                  <div class="col-4"></div>
+                  <button class="btn btn-primary col-4" @click="sumbit_username" :disabled="!username">确定</button>
+                </form>
+                <!-- End 修改用户的密码 -->
+              </div>
+              </div>
+              
+
+
             </div>
           </div>
         </div>
@@ -90,7 +138,7 @@ export default {
         let canvas = document.getElementById('outputImage');
         let ctx = canvas.getContext('2d');
         let size = Math.min(img.width, img.height);
-        let scale = window.innerWidth > 768 ? Math.min(360 / size, 1) : Math.min(200 / size, 1);
+        let scale = window.innerWidth > 768 ? Math.min(300 / size, 1) : Math.min(200 / size, 1);
         canvas.width = size * scale;
         canvas.height = size * scale;
         ctx.scale(scale, scale);
@@ -148,7 +196,7 @@ export default {
       // 获取输出图片
       let canvas = document.getElementById('outputImage');
       // 将canvas内容转换为Blob对象
-      canvas.toBlob(function(blob) {
+      canvas.toBlob(function (blob) {
         // 创建一个FormData对象
         let formData = new FormData();
         // 将Blob对象添加到FormData对象中
@@ -208,6 +256,13 @@ export default {
       show_updated.value = !show_updated.value;
     };
 
+    const old_password = ref('');
+    const new_password = ref('');
+    const confirm_pasword = ref('');
+    const update_password = () => {
+      show_updated.value = !show_updated.value;
+    };
+
     return {
       show_updated,
       confirm,
@@ -216,6 +271,10 @@ export default {
       username,
       sumbit_username,
       sumbit_avatar,
+      old_password,
+      new_password,
+      confirm_pasword,
+      update_password,
     }
   }
 }
@@ -234,7 +293,8 @@ export default {
   background-color: #ffffff;
   padding: 20px;
   border: 1px solid #ccc;
-  width: 18rem;z-index: 1;
+  width: 18rem;
+  z-index: 1;
 }
 
 .follow-button {

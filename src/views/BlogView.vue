@@ -14,6 +14,7 @@
     </div>
 
     <!-- confirm_delete -->
+    <!-- 删除帖子 -->
     <div v-if="is_confirm_delete_post" class="card confirm_delete">
       <div class="card-body">
         <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"
@@ -210,7 +211,10 @@ export default {
           // 显示弹窗
           show_id_deleted.value = true;
           deleted_message.value = "删除成功";
-          console.log("delete_post successful：", resp);
+
+          store.commit('recommend/deletePosts', post_id);
+          store.commit('recommend/subTotalPosts');
+          console.log("delete_post successful: ", resp);
         },
         error(textStatus, errorThrown) {
 

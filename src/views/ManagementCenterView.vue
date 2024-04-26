@@ -1,5 +1,11 @@
 <template>
   <section class="container" style="height: 100%;padding-top: 3.5rem;">
+
+    <!-- <a style="width: 300px;height: 200px;border-radius: 50%;background-color: aqua;
+      text-align: center;line-height: 200px; font-size:100px;">
+      OOO
+    </a> -->
+
     <div class="card">
       <div class="card-body row">
         <div class="col-12">
@@ -19,6 +25,7 @@
       </div>
     </div>
   </section>
+  
 </template>
 
 
@@ -30,6 +37,7 @@ import $ from 'jquery';
 import ReportMessage from '@/components/ManagementCenter/ReportMessage.vue';
 import UserManagement from '@/components/ManagementCenter/UserManagement.vue';
 import PostManagement from '@/components/ManagementCenter/PostManagement.vue';
+import LabelManagement from '@/components/ManagementCenter/LabelManagement.vue';
 
 
 export default {
@@ -38,6 +46,7 @@ export default {
     ReportMessage,
     UserManagement,
     PostManagement,
+    LabelManagement,
   },
   data() {
     return {
@@ -45,7 +54,8 @@ export default {
       tabs: [
         { name: '举报信息', component: ReportMessage },
         { name: '用户管理', component: UserManagement },
-        { name: '帖子管理', component: PostManagement },
+        { name: '文章管理', component: PostManagement },
+        { name: '标签管理', component: LabelManagement },
       ]
     }
   },

@@ -38,18 +38,8 @@ export default {
   components: {
     MyNavbar,
   },
-  // mounted() {
-  //   AOS.init({
-  //     duration: 700
-  //   });
-
-  //   AOS.init({
-  //     disable: function () {
-  //       var maxWidth = 1200;
-  //       return window.innerWidth < maxWidth;
-  //     }
-  //   });
-  // },
+  setup() {
+  }
 }
 </script>
 

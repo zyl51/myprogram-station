@@ -51,7 +51,7 @@
 import { VMarkdownView } from 'vue3-markdown';
 import 'vue3-markdown/dist/style.css';
 import { useRouter } from 'vue-router';
-import { computed, ref, reactive, onMounted } from 'vue'; // 更改引入的 Vue 相关模块
+import { computed, ref, reactive, watch } from 'vue'; // 更改引入的 Vue 相关模块
 import $ from 'jquery';
 
 import MyPagination from '@/components/MyPagination.vue';
@@ -74,46 +74,13 @@ export default {
     const totalPages = ref(1);
     const posts = reactive([]);
 
-    const changePage = (page) => {
-      // 在点击分页按钮时，获取关键词
-      console.log("changePage: ", page);
-      currentPage.value = page;
+    const ajax_search_posts = (page) => {
       $.ajax({
         url: "https://localhost:8082/api/search",
         type: "GET",
         data: {
           search_query: searchQuery.value, // 获取计算属性的值
           page: page,
-        },
-        dataType: "json",
-        success(resp) {
-          // console.log(resp);
-          totalPages.value = resp.total;
-          posts.length = 0;
-          posts.push(...resp.posts);
-        },
-        error(textStatus, errorThrown) {
-          console.error("get search: ", textStatus, errorThrown);
-        }
-      });
-
-      router.push({
-        name: 'search', // 你的组件的路由名称
-      });
-      // console.log("page: ", page, "posts: ", posts.value);
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
-
-    onMounted(() => {
-      $.ajax({
-        url: "https://localhost:8082/api/search",
-        type: "GET",
-        data: {
-          search_query: searchQuery.value, // 获取计算属性的值
-          page: 1,
         },
         dataType: "json",
         success(resp) {
@@ -126,9 +93,37 @@ export default {
           console.error("get search: ", textStatus, errorThrown);
         }
       });
+    }
+
+    const changePage = (page) => {
+      // 在点击分页按钮时，获取关键词
+      console.log("changePage: ", page);
+      currentPage.value = page;
+      ajax_search_posts(page);
+
+      const timestamp = Date.now();
+      router.push({
+        name: 'search', // 你的组件的路由名称
+        params: {
+          timestamp: timestamp
+        }
+      });
+      // console.log("page: ", page, "posts: ", posts.value);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    ajax_search_posts(1);
+
+    watch(() => localStorage.getItem("searchHistory"), (newValue, oldValue) => {
+      console.log(newValue);
+      if (newValue != oldValue) {
+        ajax_search_posts(1);
+      }
+      
     });
-
-
 
     return {
       changePage,

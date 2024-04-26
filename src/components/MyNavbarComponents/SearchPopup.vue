@@ -48,6 +48,7 @@ export default {
     },
 
     submitSearch() {
+
       // 去除重复记录
       this.searchHistory = this.searchHistory.filter(
         (item, index) => this.searchHistory.indexOf(item) === index
@@ -78,7 +79,20 @@ export default {
       // this.$store.dispatch("search/updateSearchQuery", this.searchQuery);
 
       // 使用router进行跳转，并带上查询参数
-      this.$router.push({ name: 'search' });
+      // console.log(this.searchQuery);
+      const timestamp = Date.now();
+      this.$router.push({
+        name: 'search', // 你的组件的路由名称
+        params: {
+          timestamp: timestamp
+        }
+      }).then(() => {
+        window.location.reload();
+      });
+
+      // window.location.reload();
+      
+      // this.$router.push({ name: 'search' });
       // 清空搜索框
       this.searchQuery = "";
       // 调用父类函数，关闭搜索框

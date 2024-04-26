@@ -4,20 +4,32 @@
     <!-- 确认提交的窗口 -->
     <div v-if="show_confirm_window" class="card submit_window">
       <div class="card-body">
-        <div class="input-group mb-3">
-          <label class="input-group-text my_label">标题</label>
-          <input type="text" v-model="title" class="form-control" id="inputGroupFile01" required="">
-        </div>
-        <div class="input-group mb-3">
-          <label class="input-group-text my_label">封面</label>
-          <input type="file" @change="onFileChange" class="form-control" id="imageUpload" accept="image/*">
-        </div>
-        <div class="col-md-6">
-          <canvas id="outputImage"></canvas>
-        </div>
-        <div style="text-align: center;">
-          <button class="btn btn-primary" @click="sumbit">确定</button>
-        </div>
+        <form @submit.prevent="sumbit">
+          <div class="input-group mb-3">
+            <label class="input-group-text my_label">标题</label>
+            <input type="text" v-model="title" class="form-control" id="inputGroupFile01" required="">
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text my_label">标签</label>
+            <select class="form-select" id="validationDefault04" required v-model="label_id">
+              <!-- <option selected disabled value="0">标签</option> -->
+              <option v-for="label in labels" :value="label.id" :key="label.id">
+                {{label.label_name}}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text my_label">封面</label>
+            <input type="file" @change="onFileChange" class="form-control" id="imageUpload" accept="image/*" required="">
+          </div>
+          <div class="col-md-6">
+            <canvas id="outputImage"></canvas>
+          </div>
+          <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary">确定</button>
+          </div>
+        </form>
+        
       </div>
     </div>
 
@@ -131,7 +143,6 @@ $$`);
             "Authorization": "Bearer " + store.getters['user/getToken'],
           },
           success(resp) {
-            // image_url = resp;
             resolve(resp);
           },
           error(textStatus, errorThrown) {
@@ -160,7 +171,7 @@ $$`);
     });
     // 确认提交帖子
     const sumbit = () => {
-      // console.log(content.value);
+      // console.log(label_id.value);
       let canvas = document.getElementById('outputImage');
       // 将canvas内容转换为Blob对象
       canvas.toBlob(function (blob) {
@@ -196,12 +207,29 @@ $$`);
                 content: content.value,
                 user_id: user_id.value,
                 user_name: username.value,
+                label_id: label_id.value,
               }),
               headers: {// jwt 验证方式，直接抄就对了
                 "Authorization": "Bearer " + store.getters['user/getToken'],
               },
               dataType: "json",
               success(resp) {
+                const post_id = ref(resp);
+                $.ajax({
+                  url: "https://localhost:8082/api/post/" + post_id.value,
+                  type: "GET",
+                  data: {
+                  },
+                  dataType: "json",
+                  success(resp) {
+                    // console.log(resp);
+                    store.dispatch('recommend/addPosts', resp);
+                  },
+                  error(textStatus, errorThrown) {
+                    console.error("get post: ", textStatus, errorThrown);
+                  }
+                });
+                // store.dispatch('recommend/addPosts', asds);
                 router.push({ name: "blog", params: { post_id: resp } });
                 console.log(resp);
               },
@@ -219,6 +247,28 @@ $$`);
       });
     }
 
+
+    // 获得标签列表
+    const labels = ref([]);
+    const label_id = ref(0);
+    $.ajax({
+      url: "https://" + store.getters.IP_PORT + "/api/label/get_label_list",
+      type: "GET",
+      data: {
+        
+      },
+      dataType: "json",
+      headers: {// jwt 验证方式，直接抄就对了
+        "Authorization": "Bearer " + store.getters['user/getToken'],
+      },
+      success(resp) {
+        labels.value = resp;
+      },
+      error(textStatus, errorThrown) {
+					console.error("get user_management get_user_toal", textStatus, errorThrown);
+				}
+    });
+
     return {
       content,
       show_confirm_window,
@@ -226,6 +276,8 @@ $$`);
       title,
       sumbit,
       handleUpload,
+      labels,
+      label_id,
     }
   }
 };

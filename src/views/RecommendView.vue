@@ -51,6 +51,8 @@ export default {
       // });
     }
 
+    // store.dispatch("recommend/initializeData");
+
     // 初始化数据
     if (store.getters['recommend/getCurrentPage'] === undefined || store.getters['recommend/getCurrentPage'] === -1) {
       store.dispatch("recommend/initializeData");

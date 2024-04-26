@@ -44,7 +44,7 @@ HEADER
               </router-link>
               <!-- <a class="text-gray" href="http://localhost:8080/blog">Continue reading</a> -->
             </div>
-            <img  class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
+            <img class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url">
           </div>
         </div>
       </div>

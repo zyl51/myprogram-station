@@ -53,11 +53,14 @@ export default {
     }
     
     // 调用 follw 中的数据进行初始化
-    store.dispatch("follow/initializeData", user_id.value);
-    router.push({
-      name: 'follow', // 你的组件的路由名称
-      query: { user_id: user_id.value, page: 1 },
-    });
+    if (store.getters['follow/getCurrentPage'] === undefined || store.getters['follow/getCurrentPage'] === -1) {
+      store.dispatch("follow/initializeData", user_id.value);
+      router.push({
+        name: 'follow', // 你的组件的路由名称
+        query: { user_id: user_id.value, page: 1 },
+      });
+    }
+    
     const posts = computed(() => {
       return store.getters['follow/getPosts']; 
     });

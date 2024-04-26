@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div style="margin-top: 20px;"></div>
-    <div v-for="user_report in user_reports" :key="user_report.id">
+    <div v-for="user_report in user_reports" :key="user_report.id" data-aos="fade-up">
       <!-- vertical-align: top; 头像和用户名在垂直方向上对齐-->
       <div class="inline-block-class" style="margin-right: 10px; vertical-align: top;">
         <img class="user-photo" :src="user_report.avatar_url" alt="头像">

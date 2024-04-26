@@ -211,6 +211,8 @@ export default {
       router.push({name: "managementCenter"});
     };
 
+    
+
     return { 
       scrolled,
       currentPage,

@@ -48,12 +48,22 @@ const ModuleRecommend = {
       state.recommend.totalPosts = totalPosts;
       state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
     },
+    addPosts(state, data) {
+      // console.log(state.recommend.posts[0]);
+      // console.log(data);
+      state.recommend.posts.unshift(data);
+      // console.log(state.recommend.posts[0]);
+    },
+    deletePosts(state, post_id) {
+      const newPosts = state.recommend.posts.filter(post => post.id !== post_id);
+      state.recommend.posts = newPosts;
+    },
     addTotalPosts(state) {
       // 增加列表数
       state.recommend.totalPosts ++ ;
       state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
     },
-    sunTotalPosts(state) {
+    subTotalPosts(state) {
       state.recommend.totalPosts -- ;
       state.recommend.totalPages = Math.ceil(state.recommend.totalPosts / 10);
     }
@@ -133,8 +143,12 @@ const ModuleRecommend = {
           console.error("get recommend posts: ", context.state.recommend.currentPage, textStatus, errorThrown);
         }
       });
-
-    }
+    },
+    addPosts(context, data) {
+      const post = reactive(data);
+      context.commit("addPosts", post);
+      context.commit("addTotalPosts");
+    },
   },
   modules: {
   }
