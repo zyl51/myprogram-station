@@ -4,7 +4,7 @@
     <div v-if="is_delete_popup" class="card confirm_delete">
       <div class="card-body">
         <h5 class="card-title" style="text-align: center;font-weight: 900;color: #502C6C;"
-          >删除成功
+          >{{ delete_message }}
         </h5>
         <div class="row">
           <div class="col-4"></div>
@@ -44,9 +44,9 @@
 
     <!-- 用户列表 -->
     <div class="row text-center">
-      <div class="col-2">封面</div>
+      <div class="col-1">封面</div>
       <div class="col-1">id</div>
-      <div class="col-1">标题</div>
+      <div class="col-2">标题</div>
       <div class="col-1">标签</div>
       <div class="col-1">作者</div>
       <div class="col-2">发布时间</div>
@@ -63,7 +63,7 @@
           <div class="col-12" data-aos="fade-left">
             <h5 class="mb-4 text-center">修改帖子信息</h5>
             <div class="">
-              <form @submit.prevent="confirm_popup(index)">
+              <form @submit.prevent="confirm_popup">
                 <div class="form-group input-group">
                   <span class="input-group-text">标题</span>
                   <input v-model="update_title" class="form-control" placeholder="标题" required="">
@@ -95,7 +95,7 @@
       <br>
       <!-- 输出帖子列表 -->
       <div class="row text-center" data-aos="fade-up">
-        <div class="col-2">
+        <div class="col-1">
           <a :href="post.cover_url" target="_blank">
             <img class="user-photo" :src="post.cover_url" alt="封面">
           </a>
@@ -103,7 +103,7 @@
         <div class="col-1">
           {{ post.id }}
         </div>
-        <div class="col-1">
+        <div class="col-2">
           <!-- <span class="badge badge-pill badge-success">用户</span> -->
           <router-link :to="{ name: 'blog', params: { post_id: post.id } }" class="head-and-name"
             style="font-weight: 600;">{{ post.title }}</router-link>
@@ -308,6 +308,39 @@ export default {
       });
     };
 
+
+    const ajax_confirm_popup = (index) => {
+      const id = posts.value[index].id;
+      // console.log(id, update_title.value, update_label_id.value);
+      $.ajax({
+        url: "https://" + store.getters.IP_PORT + "/api/post_management/update_post_info",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          post_id: id,
+          title: update_title.value,
+          label_id: update_label_id.value,
+        }),
+        // dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + store.getters['user/getToken'],
+        },
+        success(resp) {
+          console.log(resp);
+          posts.value[index].title = update_title.value;
+          posts.value[index].label_id = update_label_id.value;
+          const label_index = labels.value.findIndex(label => label.id === update_label_id.value);
+          posts.value[index].label_name = labels.value[label_index].label_name;
+          is_popup.value = false;
+          delete_message.value = "修改成功";
+          is_delete_popup.value = true;
+        },
+        error(textStatus, errorThrown) {
+          console.error("update post info: ", textStatus, errorThrown);
+        }
+      });
+    };
+
     ajax_get_posts_total();
     ajax_get_posts(1);
     ajax_get_labels();
@@ -344,6 +377,7 @@ export default {
     });
 
 
+    // 颜色
     const color = [
       "badge-primary",
       "badge-secondary",
@@ -355,10 +389,12 @@ export default {
       "badge-cyan",
     ];
 
+    const delete_message = ref('');
     // 删除帖子
     // 开启删除弹窗
     const is_delete_popup = ref(false);
     const delete_popup = () => {
+      delete_message.value = "删除成功";
       is_delete_popup.value = !is_delete_popup.value;
     };
 
@@ -372,7 +408,9 @@ export default {
     const update_label_id = ref(0);
     const update_title = ref('');
     const is_popup = ref(false);
+    const post_index = ref(0);
     const popup = (index) => {
+      post_index.value = index;
       is_popup.value = !is_popup.value;
       update_title.value = posts.value[index].title;
       update_label_id.value = posts.value[index].label_id;
@@ -381,6 +419,12 @@ export default {
     const colse_popup = () => {
       is_popup.value = !is_popup.value;
     }
+
+    const confirm_popup = () => {
+      const index = post_index.value;
+      // console.log(id);
+      ajax_confirm_popup(index);
+    };
 
     return {
       changePage,
@@ -394,12 +438,14 @@ export default {
       label_id,
       delete_post,
       delete_popup,
+      delete_message,
       is_delete_popup,
       update_label_id,
       update_title,
       is_popup,
       popup,
       colse_popup,
+      confirm_popup,
     }
   }
 }

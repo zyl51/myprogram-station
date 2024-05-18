@@ -31,6 +31,7 @@
             <div class="card-body row">
               <div class="card col-6">
                 <div class="card-body">
+                  <h4 class="mb-4 text-center">修改个人信息</h4>
                 <!-- 修改用户名 -->
                 <div class="input-group mb-3">
                   <label class="input-group-text my_label">用户名</label>
@@ -66,7 +67,8 @@
               <div class="card col-5">
                 <div class="card-body">
                 <!-- 修改用户密码 -->
-                <form class="row" action="">
+                <form class="row" action="" @submit.prevent="update_password">
+                  <h4 class="mb-4 text-center">修改密码</h4>
                   <div class="input-group mb-3 col-12">
                     <label class="input-group-text my_label">旧密码</label>
                     <input type="password" v-model="old_password" class="form-control" id="inputGroupFile01" required="">
@@ -75,12 +77,15 @@
                     <label class="input-group-text my_label">新密码</label>
                     <input type="password" v-model="new_password" class="form-control" id="inputGroupFile01" required="">
                   </div>
-                  <div class="input-group mb-3 col-12">
+                  <div class="input-group col-12">
                     <label class="input-group-text my_label">确认密码</label>
                     <input type="password" v-model="confirm_pasword" class="form-control" id="inputGroupFile01" required="">
                   </div>
+                  <div class="col-12 mb-3" style="font-weight: 900;color: red;margin-left: 4px;">
+                    {{ update_password_error }}
+                  </div>
                   <div class="col-4"></div>
-                  <button class="btn btn-primary col-4" @click="sumbit_username" :disabled="!username">确定</button>
+                  <button class="btn btn-primary col-4" type="submit" :disabled="!username">确定</button>
                 </form>
                 <!-- End 修改用户的密码 -->
               </div>
@@ -102,6 +107,7 @@
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import $ from 'jquery';
+import { useRouter } from 'vue-router';
 // import { useRouter } from 'vue-router';
 
 export default {
@@ -147,6 +153,7 @@ export default {
     }
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
     // const router = useRouter();
     const user = computed(() => {
@@ -256,11 +263,48 @@ export default {
       show_updated.value = !show_updated.value;
     };
 
+
+    const ajax_update_password = () => {
+      $.ajax({
+        url: "https://" + IP_PORT + "/api/userprofile/update_password",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          user_id: user_id.value,
+          old_password: old_password.value,
+          new_password: new_password.value,
+        }),
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + store.getters['user/getToken'],
+        },
+        dataType: "json",
+        success(resp) {
+          show_updated.value = !show_updated.value;
+          router.push({name: "login"}).then(() => {
+            store.dispatch('user/logout');
+          });
+          console.log(resp);
+        },
+        error(xhr, textStatus, errorThrown) {
+          update_password_error.value = xhr.responseJSON;
+          console.log(xhr.responseJSON);
+          console.error("update password error", textStatus, errorThrown);
+        }
+      })
+    };
+
     const old_password = ref('');
     const new_password = ref('');
     const confirm_pasword = ref('');
+    const update_password_error = ref('');
     const update_password = () => {
-      show_updated.value = !show_updated.value;
+      // show_updated.value = !show_updated.value;
+      if (new_password.value != confirm_pasword.value) {
+        update_password_error.value = "两次输入的密码不一致";
+      } else {
+        // update_password_error.value = "一致";
+        ajax_update_password();
+      }
     };
 
     return {
@@ -275,6 +319,7 @@ export default {
       new_password,
       confirm_pasword,
       update_password,
+      update_password_error,
     }
   }
 }

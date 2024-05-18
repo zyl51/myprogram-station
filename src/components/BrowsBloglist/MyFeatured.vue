@@ -25,8 +25,16 @@ HEADER
           <div class="card flex-md-row mb-4 box-shadow h-xl-300 post-hover">
             <!-- <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url"> -->
             <div class="card-body d-flex flex-column align-items-start">
-              <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name }}</strong>
-              <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name }}</strong>
+              <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">
+                <router-link :to="{name: 'userProfile', params: {user_id: post.user_id}}" class="head-and-name">
+                  {{ post.user_name }}
+                </router-link>
+              </strong>
+              <strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">
+                <router-link :to="{name: 'userProfile', params: {user_id: post.user_id}}" class="head-and-name">
+                  {{ post.user_name }}
+                </router-link>
+              </strong>
               <h3 class="mb-0">
                 <router-link class="text-dark" :to="{name: 'blog', params: {post_id: post.id}}">
                   {{ post.title }}

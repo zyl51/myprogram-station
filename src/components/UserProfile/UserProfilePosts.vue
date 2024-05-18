@@ -8,19 +8,19 @@
 
 			<!-- Featured -->
 			<div class="row gap-y ">
-				<div v-for="(post, index) in posts" :key="post.id" class="col-lg-12" data-aos="fade-up">
-					<div class="card flex-md-row mb-4 box-shadow h-xl-300 post-hover">
+				<div v-for="(post) in posts" :key="post.id" class="col-lg-12" data-aos="fade-up">
+					<div class="card flex-md-row mb-4 box-shadow h-xl-250 post-hover">
 						<!-- <img v-if="index % 2 == 0" class="card-img-right flex-auto d-none d-md-block" :src="post.cover_url"> -->
 						<div class="card-body d-flex flex-column align-items-start">
-							<strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name
+							<!-- <strong v-if="index % 2 == 0" class="d-inline-block mb-2 text-purple">{{ post.user_name
 								}}</strong>
 							<strong v-if="index % 2 == 1" class="d-inline-block mb-2 text-success">{{ post.user_name
-								}}</strong>
-							<h3 class="mb-0">
+								}}</strong> --> 
+							<h4 class="mb-0">
 								<router-link class="text-dark" :to="{ name: 'blog', params: { post_id: post.id } }">
 									{{ post.title }}
 								</router-link>
-							</h3>
+							</h4>
 							<div class="mb-2 text-muted inline-block-class">
 								发布时间：{{ post.release_time }}
 							</div>

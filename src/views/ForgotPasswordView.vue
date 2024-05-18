@@ -6,7 +6,7 @@
       <div class=" d-md-flex align-items-center h-md-100 p-5 justify-content-center">
         <div class="col-md-9">
           <form class="border rounded p-5 " @submit.prevent="register">
-            <h3 class="mb-4 text-center">Forgot Password</h3>
+            <h3 class="mb-4 text-center">忘记密码</h3>
 
             <!-- 邮箱 -->
             <div class="form-group">

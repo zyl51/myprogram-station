@@ -10,7 +10,7 @@
           <!-- <h1 class="mb-0 mt-3 display-4">Anchor</h1> -->
           <h1><strong class="title-gradient mb-0 mt-3">Program Station</strong></h1>
           <h5 class="font-weight-light mb-4" style="font-weight: 900 !important;">
-            With this FREE Bootstrap 5.3.2
+            前端使用的免费的 Bootstrap 5.3.2
             <strong> UI Kit</strong>
           </h5>
           <a class="btn btn-outline-white btn-lg btn-round hidden" href="https://v5.bootcss.com/">
@@ -23,7 +23,7 @@
     <div class="container col-md-6 p-0 bg-white h-md-100" data-aos="fade-left">
       <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
         <form class="border rounded p-5" @submit.prevent="login">
-          <h3 class="mb-4 text-center">Sign In</h3>
+          <h3 class="mb-4 text-center">登录</h3>
           <div class="form-group">
             <input type="email" v-model="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="邮箱"
               required="">

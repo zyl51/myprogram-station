@@ -24,8 +24,8 @@
             开始
           </router-link>
         </div>
-        <div class="col align-self-bottom align-items-right text-right h-max-380 position-relative z-index-1">
-          <img src="../assets/img/demo/dashb.png" class="rounded img-fluid">
+        <div class="col align-self-bottom align-items-right text-right h-max-480 position-relative z-index-1">
+          <img src="../assets/img/demo/dashb1.png" class="rounded img-fluid">
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
 							alt="First slide">
 						<div class="carousel-caption d-none d-md-block">
 							<h5>
-                atthew Hamilton 拍的圣地亚哥使命海滩
+                圣地亚哥使命海滩
                 <!-- Mission Beach, San Diego, United States by Matthew Hamilton -->
               </h5>
 						</div>

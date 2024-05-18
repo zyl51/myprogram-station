@@ -125,7 +125,7 @@ const ModuleUser = {
       });
 
       // 周期函数，用来获取新 token 和用户数据
-      setInterval(() => {
+      setTimeout(() => {
         $.ajax({
           url: "https://127.0.0.1:8082/api/token_get_userinfo",
           type: "POST",
@@ -138,8 +138,9 @@ const ModuleUser = {
           dataType: "json",
           success(resp) {
             // 验证成功
-            context.commit("updateUser", resp);
-            context.commit("updateToken", resp.token);
+            context.dispatch("updateUser", resp);
+            // context.commit("updateUser", resp);
+            // context.commit("updateToken", resp.token);
           },
           error(textStatus, errorThrown) {
             console.error("updateUser: get user info through token: ", textStatus, errorThrown);
