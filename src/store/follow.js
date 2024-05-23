@@ -9,7 +9,7 @@ const ModuleFollow = {
       posts: [],
       currentPage: -1,
       totalPages: 1,
-      totalPosts: 1,
+      totalPosts: 0,
     }),
   },
   getters: {
@@ -24,6 +24,9 @@ const ModuleFollow = {
     getTotalPages(state) {
       return state.follow.totalPages;
     },
+    getTotalPosts(state) {
+      return state.follow.totalPosts;
+    }
   },
   mutations: {
     // 对 state 数据进行直接修改
@@ -67,12 +70,13 @@ const ModuleFollow = {
         posts: [],
         currentPage: 1,
         totalPages: 1,
-        totalPosts: 1,
+        totalPosts: 0,
       });
 
       // 申请列表的数据.
       // 请求数据
       // console.log("follow", context.rootState.user.user.token);
+      // console.log("follow initializeData");
       $.ajax({
         url: "https://localhost:8082/api/follow/totalnumbers/" + user_id,
         type: "GET",
@@ -102,6 +106,7 @@ const ModuleFollow = {
             },
             success (resp) {
               // console.log(Math.ceil(0.1));
+              console.log("follow initializeData", resp);
               follow.posts = resp;
               context.commit("updateFollow", follow);
             },

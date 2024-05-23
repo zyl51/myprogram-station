@@ -4,6 +4,15 @@
 
   <section class="pt-5 pb-5" data-aos="fade-down" style="margin-top: 50px;">
     <div class="container">
+      <!-- 如果搜索没有结果 -->
+      <div v-if="posts.length == 0" class="span6 container" style="background-color: #FF5916; border-radius: 5px;" data-aos="fade-up">
+        <div class="alert">
+          <!-- <button type="button" class="close" data-dismiss="alert" @click="colse_delete_error">×</button> -->
+          <h3 style="color: white;text-align: center;">
+            无匹配的结果
+          </h3>
+        </div>
+      </div>
 
       <!-- Featured -->
       <div class="row gap-y">
@@ -122,7 +131,7 @@ export default {
       if (newValue != oldValue) {
         ajax_search_posts(1);
       }
-      
+
     });
 
     return {

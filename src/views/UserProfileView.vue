@@ -69,7 +69,7 @@ import UserProfilePosts from '@/components/UserProfile/UserProfilePosts.vue';
 import UserProfileMessages from '@/components/UserProfile/UserProfileMessages.vue';
 import UserProfileCollects from '@/components/UserProfile/UserProfileCollects.vue';
 
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch  } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import $ from 'jquery';
@@ -94,18 +94,51 @@ export default {
   methods: {
   },
   setup() {
+    const ajax_follow_relationships = () => {
+      $.ajax({
+        url: "https://localhost:8082/api/follow/relationships",
+        type: "GET",
+        data: {
+          follower_id: user_profile_id.value,
+          following_id: user_id
+        },
+        dataType: "json",
+        headers: {// jwt 验证方式，直接抄就对了
+          "Authorization": "Bearer " + store.getters['user/getToken'],
+        },
+        success(resp) {
+          // console.log(user_id, user_profile_id.value);
+          is_follow.value = resp;
+          console.log("is_follow：", resp, is_follow.value);
+        },
+        error(textStatus, errorThrown) {
+          // console.log(store.getters['user/getToken']);
+          console.error("get user follow relationships", textStatus, errorThrown);
+        }
+      });
+    };
+
     const route = useRoute();
     const store = useStore();
 
     // console.log("toekn is: ", token.value);
     const user_id = parseInt(route.params.user_id);
-    const user_profile_id = computed(() => {
-      return store.getters['user/getUserId'];
-    });
+    const user_profile_id = ref(null);
+    // const user_profile_id = computed(() => {
+    //   return store.getters['user/getUserId'];
+    // });
+    const is_me = ref(false);
+    watch(() => store.getters['user/getUserId'], (newUserId) => {
+        user_profile_id.value = newUserId;
+        is_me.value = user_id === user_profile_id.value;
+        ajax_follow_relationships();
+      },
+      { immediate: true } // 立即执行一次
+    );
     // 是不是自己
     // 数值匹配就可以了
-    const is_me = (user_id === user_profile_id.value);
-    // console.log("user_id: ", user_id, "user_profile_id: ", user_profile_id.value);
+    // const is_me = ref(user_id === user_profile_id.value);
+    console.log("user_id: ", user_id, "user_profile_id: ", user_profile_id.value);
     // console.log("is_me: ", is_me);
     const user = reactive({});
 
@@ -132,27 +165,11 @@ export default {
     });
 
     // 看看是否已经关注  
-    const is_follow = ref(false);
-    $.ajax({
-      url: "https://localhost:8082/api/follow/relationships",
-      type: "GET",
-      data: {
-        follower_id: user_profile_id.value,
-        following_id: user_id
-      },
-      dataType: "json",
-      headers: {// jwt 验证方式，直接抄就对了
-        "Authorization": "Bearer " + store.getters['user/getToken'],
-      },
-      success(resp) {
-        is_follow.value = resp;
-        console.log("is_follow", resp);
-      },
-      error(textStatus, errorThrown) {
-        // console.log(store.getters['user/getToken']);
-        console.error("get user follow relationships", textStatus, errorThrown);
-      }
-    });
+    const is_follow = ref(true);
+    
+
+    ajax_follow_relationships();
+    
 
     // 关注函数
     const follow = (count) => {
@@ -173,6 +190,7 @@ export default {
         success(resp) {
           is_follow.value = !is_follow.value;
           user.fans = user.fans + count;
+          store.dispatch("follow/initializeData", user_id);
           console.log(resp);
         },
         error(textStatus, errorThrown) {
@@ -203,7 +221,7 @@ export default {
 
     const delete_message = () => {
       message_total.value = message_total.value - 1;
-      console.log("111");
+      // console.log("111");
     };
 
     const is_login = computed(() => {
